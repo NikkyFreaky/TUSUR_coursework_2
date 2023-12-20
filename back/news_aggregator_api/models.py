@@ -17,28 +17,28 @@ class System(models.Model):
     # Методы
     def __str__(self):
         return f"{self.name} (Last update: {self.last_update})"
-    
 
-# class UserProfile(models.Model):
-#     # Поля
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     system = models.ForeignKey(System, on_delete=models.CASCADE)
-#     groups = models.ManyToManyField(Group, blank=True, help_text='Системный доступ пользователя')
-#     registration_date = models.DateField(auto_now_add=True, help_text='Дата регистрации пользователя')
-#     last_login = models.DateField(auto_now=True, help_text='Дата последнего входа пользователя')
 
-#     # Метаданные
-#     class Meta:
-#         ordering = ["user.username", "-last_login"]
+class UserProfile(models.Model):
+   # Поля
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    system = models.ForeignKey(System, on_delete=models.CASCADE)
+    groups = models.ManyToManyField(Group, blank=True, help_text='Системный доступ пользователя')
+    registration_date = models.DateField(auto_now_add=True, help_text='Дата регистрации пользователя')
+    last_login = models.DateField(auto_now=True, help_text='Дата последнего входа пользователя')
 
-#     # Методы
-#     def __str__(self):
-#         if self.user.groups.filter(name='Администратор').exists():
-#             return f"Администратор - {self.user.username} (Last login: {self.last_login})"
-#         elif self.user.groups.filter(name='Пользователь').exists():
-#             return f"Пользователь - {self.user.username} (Last login: {self.last_login})"
-#         else:
-#             return f"Другая группа - {self.user.username} (Last login: {self.last_login})"
+     # Метаданные
+    '''class Meta:
+        ordering = ["-user.username", "-last_login"]'''
+
+     # Методы
+    def __str__(self):
+        if self.user.groups.filter(name='Администратор').exists():
+            return f"Администратор - {self.user.username} (Last login: {self.last_login})"
+        elif self.user.groups.filter(name='Пользователь').exists():
+            return f"Пользователь - {self.user.username} (Last login: {self.last_login})"
+        else:
+            return f"Другая группа - {self.user.username} (Last login: {self.last_login})"
 
 
 class UserCategory(models.Model):
