@@ -27,9 +27,11 @@ class UserProfile(models.Model):
     registration_date = models.DateField(auto_now_add=True, help_text='Дата регистрации пользователя')
     last_login = models.DateField(auto_now=True, help_text='Дата последнего входа пользователя')
 
+    '''
      # Метаданные
-    '''class Meta:
-        ordering = ["-user.username", "-last_login"]'''
+    class Meta:
+        ordering = ["-user.username", "-last_login"]
+    '''
 
      # Методы
     def __str__(self):
