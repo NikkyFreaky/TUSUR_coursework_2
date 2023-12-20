@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import System, UserCategory, Category, Country, Region, City, Source, News, Asset, Celebrity, FamousEvent, FamousDate
+from .models import System, UserCategory, Category, Country, Region, City, Source, News, Asset, Celebrity, FamousEvent, \
+    FamousDate, UserProfile
 
 # Register your models here.
 
@@ -15,3 +16,4 @@ admin.site.register(Asset)
 admin.site.register(Celebrity)
 admin.site.register(FamousEvent)
 admin.site.register(FamousDate)
+admin.site.register(UserProfile)
