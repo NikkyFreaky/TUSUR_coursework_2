@@ -101,8 +101,8 @@ class City(models.Model):
 class Source(models.Model):
     # Поля
     source_id = models.AutoField(primary_key=True)
-    source_name = models.CharField(max_length=50, help_text='Название источника')
-    source_link = models.CharField(max_length=100, help_text='Ссылка на источник')
+    source_name = models.CharField(max_length=255, help_text='Название источника')
+    source_link = models.CharField(max_length=255, help_text='Ссылка на источник')
 
     # Методы
     def __str__(self):
@@ -113,9 +113,9 @@ class News(models.Model):
     # Поля
     news_id = models.AutoField(primary_key=True)
     source = models.ForeignKey('Source', on_delete=models.CASCADE)
-    title = models.CharField(max_length=50, help_text='Название новости')
+    title = models.CharField(max_length=255, help_text='Название новости')
     description = models.TextField(help_text='Полный текст новости')
-    event_date = models.DateField(help_text='Дата произошедшего события')
+    event_date = models.DateField(help_text='Дата произошедшего события', null=True)
     publication_date = models.DateField(auto_now=True, help_text='Дата публикации')
     categories = models.ManyToManyField(Category, related_name='news', blank=True)
     countries = models.ManyToManyField(Country, related_name='news', blank=True)
