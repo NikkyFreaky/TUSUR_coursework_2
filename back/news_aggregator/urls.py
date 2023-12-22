@@ -25,4 +25,6 @@ urlpatterns = [
 
     path('api/', include('news_aggregator_api.urls')),
     path('', RedirectView.as_view(url='/api/', permanent=True)),
+
+    path('accounts/', include('django.contrib.auth.urls')),
 ]

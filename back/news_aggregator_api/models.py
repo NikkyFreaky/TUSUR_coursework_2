@@ -1,5 +1,8 @@
 from django.db import models
+from django.conf import settings
+
 from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
@@ -19,13 +22,15 @@ class System(models.Model):
         return f"{self.name} (Last update: {self.last_update})"
 
 
-class UserProfile(models.Model):
-   # Поля
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+class UserProfile(AbstractUser):
+    # Поля
     system = models.ForeignKey(System, on_delete=models.CASCADE)
     groups = models.ManyToManyField(Group, blank=True, help_text='Системный доступ пользователя')
     registration_date = models.DateField(auto_now_add=True, help_text='Дата регистрации пользователя')
     last_login = models.DateField(auto_now=True, help_text='Дата последнего входа пользователя')
+
+    # Обязательные поля
+    REQUIRED_FIELDS = ['groups', 'registration_date']
 
     '''
      # Метаданные
@@ -46,7 +51,7 @@ class UserProfile(models.Model):
 class UserCategory(models.Model):
     # Поля
     user_category_id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     user_category_name = models.CharField(max_length=30, help_text='Название пользовательской категории')
 
     # Метаданные
@@ -59,9 +64,28 @@ class UserCategory(models.Model):
     
 
 class Category(models.Model):
+    # Категории
+    POLITICAL = 'Политика'
+    ECONOMY = 'Экономика'
+    TECHNOLOGY = 'Технологии'
+    SPORT = 'Спорт'
+    HEALTH_SCIENCE = 'Наука и Здоровье'
+    ENTERTAINMENT = 'Развлечения'
+    CRIME = 'Криминал'
+
+    CATEGORY_CHOICES = [
+        (POLITICAL, 'Политика'),
+        (ECONOMY, 'Экономика'),
+        (TECHNOLOGY, 'Технологии'),
+        (SPORT, 'Спорт'),
+        (HEALTH_SCIENCE, 'Наука и Здоровье'),
+        (ENTERTAINMENT, 'Развлечения'),
+        (CRIME, 'Криминал'),
+    ]
+
     # Поля
     category_id = models.AutoField(primary_key=True)
-    category_name = models.CharField(max_length=50, help_text='Название категории')
+    category_name = models.CharField(max_length=50, choices=CATEGORY_CHOICES, help_text='Название категории')
 
     # Методы
     def __str__(self):
@@ -101,7 +125,7 @@ class City(models.Model):
 class Source(models.Model):
     # Поля
     source_id = models.AutoField(primary_key=True)
-    source_name = models.CharField(max_length=50, help_text='Название источника')
+    source_name = models.CharField(max_length=50, help_text='Название источника', blank=True)
     source_link = models.CharField(max_length=100, help_text='Ссылка на источник')
 
     # Методы
@@ -115,7 +139,7 @@ class News(models.Model):
     source = models.ForeignKey('Source', on_delete=models.CASCADE)
     title = models.CharField(max_length=50, help_text='Название новости')
     description = models.TextField(help_text='Полный текст новости')
-    event_date = models.DateField(help_text='Дата произошедшего события')
+    event_date = models.DateField(null=True, help_text='Дата произошедшего события')
     publication_date = models.DateField(auto_now=True, help_text='Дата публикации')
     categories = models.ManyToManyField(Category, related_name='news', blank=True)
     countries = models.ManyToManyField(Country, related_name='news', blank=True)
