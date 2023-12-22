@@ -1,49 +1,65 @@
 from django.shortcuts import render, redirect
 import requests
-from bs4 import BeautifulSoup as BSoup
-from .models import News, Source, Asset
-import certifi
-from django.template.defaultfilters import truncatechars
+from .models import News, Source, Asset, Category
+from datetime import datetime
+from django.utils import timezone
+
 
 # Create your views here.
 
+# эта штука парсит, надо здесь там всякие категории передавать, дескрипшн еще и опционально страны и т.д.
 
-def scrape(request):  # эта штука парсит, надо здесь там всякие категории передавать, дескрипшн еще и опционально страны и т.д.
+def scrape(request):
     api_key = '238131f7f6664e22b6d625ac06847c72'
-    url = 'https://newsapi.org/v2/top-headlines'
-    params = {
-        'country': 'us',  # Укажите страну, из которой хотите получить новости
-        'apiKey': api_key
-    }
+    categories = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology']
 
-    response = requests.get(url, params=params)
+    for category in categories:
+        url = 'https://newsapi.org/v2/top-headlines'
+        params = {
+            'country': 'us',
+            'category': category,
+            'apiKey': api_key
+        }
 
-    if response.status_code == 200:
-        news_data = response.json()
+        response = requests.get(url, params=params)
 
-        for article in news_data.get('articles', []):
-            title = truncatechars(article.get('title', ''), 90)
-            link = truncatechars(article.get('url', ''), 90)
-            image_src = truncatechars(article.get('urlToImage', ''), 90)
+        if response.status_code == 200:
+            news_data = response.json()
 
-            # Создаем и сохраняем объект Source
-            source_name = article.get('source', {}).get('name', '')
+            for article in news_data.get('articles', []):
+                title = article.get('title', '')
+                link = article.get('url', '')
+                image_src = article.get('urlToImage', '')
+                source_name = article.get('source', {}).get('name', '')
+                content = article.get('content', '')
+                published_at_datetime = article.get('publishedAt', '')
+                published_at_date = article.get('publishedAt', '')
 
+                # Преобразуем строку с датой в объект datetime
+                published_at_datetime = datetime.strptime(published_at_datetime, "%Y-%m-%dT%H:%M:%SZ")
+                published_at_date = datetime.strptime(published_at_date, "%Y-%m-%dT%H:%M:%SZ").date()
 
+                # Создаем и сохраняем объект Source
+                source, created = Source.objects.get_or_create(source_name=source_name, source_link=link)
 
-            source, created = Source.objects.get_or_create(source_name=source_name, source_link=link)
+                # Создаем и сохраняем объект News
+                news = News.objects.create(
+                    title=title,
+                    source=source,
+                    description=content,
+                    publication_date=published_at_datetime,
+                    event_date=published_at_date
+                )
 
-            # Создаем и сохраняем объект News
-            news = News.objects.create(title=title, source=source)
+                # Создаем и сохраняем объект Asset
+                asset = Asset.objects.create(images=image_src, news=news)
 
-            # Создаем и сохраняем объект Asset
-            asset = Asset.objects.create(images=image_src, news=news)
+                # Присваиваем категорию новости
+                category_obj, created = Category.objects.get_or_create(category_name=category)
+                news.categories.add(category_obj)
 
-
-        return redirect("../")
-    else:
-        print(f"Failed to fetch news. Status code: {response.status_code}")
-        return redirect("../")
+            # Не используем return внутри цикла
+    return redirect("../")
 
 
 def default(request):
