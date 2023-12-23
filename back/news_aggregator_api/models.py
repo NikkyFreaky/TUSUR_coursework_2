@@ -106,8 +106,8 @@ class City(models.Model):
 class Source(models.Model):
     # Поля
     source_id = models.AutoField(primary_key=True)
-    source_name = models.CharField(max_length=255, help_text='Название источника')
-    source_link = models.CharField(max_length=500, help_text='Ссылка на источник')
+    source_name = models.CharField(max_length=500, help_text='Название источника')
+    source_link = models.CharField(max_length=1000, help_text='Ссылка на источник')
 
     # Методы
     def __str__(self):
