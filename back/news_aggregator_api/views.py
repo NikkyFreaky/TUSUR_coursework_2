@@ -1,8 +1,13 @@
 from django.shortcuts import render, redirect
-from .components.parser import parse_news
+from .components.parser.parser import parse_news
+from .components.crud.get_news import get_news
 from .models import News, Country
 from django.http import JsonResponse
+
 # Create your views here.
+
+def get_all_news(request, category=None):
+    return get_news(request, category=None)
 
 
 def get_news_by_country(request):  # сам эндпоинт

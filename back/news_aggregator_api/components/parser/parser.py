@@ -1,8 +1,7 @@
 import requests
-from ..models import News, Source, Asset, Category, Country
+from ...models import News, Source, Asset, Category, Country
 from datetime import datetime
 from django.utils import timezone
-
 
 def parse_news(country):
     api_key = '238131f7f6664e22b6d625ac06847c72'
@@ -12,6 +11,7 @@ def parse_news(country):
                  'gr', 'hk', 'hu', 'id', 'ie', 'il', 'in', 'it', 'jp', 'kr', 'lt', 'lv', 'ma', 'mx', 'my', 'ng', 'nl',
                  'no', 'nz', 'ph', 'pl', 'pt', 'ro', 'rs', 'ru', 'sa', 'se', 'sg', 'si', 'sk', 'th', 'tr', 'tw', 'ua',
                  'us', 've', 'za']
+
     for category in categories:
         url = 'https://newsapi.org/v2/top-headlines'
         if country in countries:
@@ -31,12 +31,16 @@ def parse_news(country):
 
             for article in news_data.get('articles', []):
                 title = article.get('title', '')
+                # Проверяем, содержится ли '[Removed]' в заголовке новости
+                if '[Removed]' in title:
+                    print(f"Пропущена новость с заголовком '{title}' (содержит '[Removed]')")
+                    continue  # Пропускаем текущую итерацию цикла
+
                 link = article.get('url', '')
                 image_src = article.get('urlToImage', '')
                 source_name = article.get('source', {}).get('name', '')
                 content = article.get('content', '')
                 published_at_string = article.get('publishedAt', '')
-
 
                 # Преобразуем строку с датой в объект datetime с часовым поясом UTC
                 published_at_datetime = datetime.strptime(published_at_string, "%Y-%m-%dT%H:%M:%SZ")
