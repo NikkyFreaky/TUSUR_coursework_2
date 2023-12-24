@@ -1,17 +1,33 @@
 from django.http import JsonResponse
 from ...models import News
+import datetime
 
-def get_news(request, category=None):
+def get_news(request, category=None, country=None, date=None):
     success = True
     message = 'Запрос успешно выполнен'
     news_list = []
 
     try:
+        # Фильтр по категории
         if category:
-            # Если предоставлена категория, фильтруем новости по этой категории
             all_news = News.objects.filter(categories__category_name=category)
+
+        # Фильтр по стране
+        elif country:
+            all_news = News.objects.filter(countries__country_name=country)
+
+        # Фильтр по дате
+        elif date:
+            # Если фильтр по дате - 'past 7 days'
+            if isinstance(date, datetime.timedelta):
+                start_date = datetime.date.today() - date
+                all_news = News.objects.filter(event_date__gte=start_date)
+            # Если фильтр по дате - 'today', 'this month', 'this year'
+            else:
+                all_news = News.objects.filter(event_date__gte=date)
+                
+        # В противном случае получаем все новости
         else:
-            # Иначе получаем все новости
             all_news = News.objects.all()
 
         for news in all_news:
@@ -32,7 +48,7 @@ def get_news(request, category=None):
                 'publication_date': news.publication_date.isoformat(),
                 'categories': [category.category_name for category in news.categories.all()],
                 'countries': [country.country_name for country in news.countries.all()],
-                'asset': asset_info,
+                'assets': asset_info,
             })
     except Exception as e:
         success = False

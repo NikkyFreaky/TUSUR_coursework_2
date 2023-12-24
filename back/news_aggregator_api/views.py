@@ -3,14 +3,43 @@ from .components.parser.parser import parse_news
 from .components.crud.get_news import get_news
 from .models import News, Country
 from django.http import JsonResponse
+import datetime
 
 # Create your views here.
 
-def get_all_news(request, category=None):
-    return get_news(request, category=None)
+# Возвращает все новости
+def get_all_news(request):
+    return get_news(request)
+
+# Возвращает новости по категории
+def get_news_by_category(request, category):
+    return get_news(request, category=category)
+
+# Возвращает новости по стране
+def get_news_by_country(request, country):
+    return get_news(request, country=country)
+
+# Возвращает новости по дате
+def get_news_by_date(request, date):
+    today = datetime.date.today()
+    
+    if date == "today":
+        date_filter = today
+    elif date == "past7days":
+        date_filter = today - datetime.timedelta(days=7)
+    elif date == "month":
+        first_day_of_month = today.replace(day=1)
+        date_filter = first_day_of_month
+    elif date == "year":
+        first_day_of_year = today.replace(month=1, day=1)
+        date_filter = first_day_of_year
+    else:
+        return JsonResponse({'success': False, 'message': 'Неправильный формат даты'})
+
+    return get_news(request, date=date_filter)
 
 
-def get_news_by_country(request):  # сам эндпоинт
+def get_news_for_country(request):  # сам эндпоинт
 
     if request.method == 'GET':
         country_name = request.GET.get('country_name')
