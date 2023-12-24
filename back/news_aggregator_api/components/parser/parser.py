@@ -44,7 +44,7 @@ def parse_news(country):
 
                 # Преобразуем строку с датой в объект datetime с часовым поясом UTC
                 published_at_datetime = datetime.strptime(published_at_string, "%Y-%m-%dT%H:%M:%SZ")
-                published_at_datetime = timezone.make_aware(published_at_datetime, timezone.utc)
+                published_at_datetime = timezone.make_aware(published_at_datetime, timezone=timezone.utc)
 
                 # Создаем и сохраняем объект Source
                 source, created = Source.objects.get_or_create(source_name=source_name, source_link=link)

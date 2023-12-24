@@ -29,23 +29,30 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',  # это штука чтобы сессии
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'news_aggregator_api.apps.NewsAggregatorApiConfig',
+    'news_aggregator_api.apps.NewsAggregatorApiConfig',    
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',  # тоже штука чтобы сессии
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',   
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Замените это на ваш фронтенд-домен
+    "http://127.0.0.1:3000",  # Если вы используете 127.0.0.1 вместо localhost
 ]
 
 ROOT_URLCONF = 'news_aggregator.urls'
