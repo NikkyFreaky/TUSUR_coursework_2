@@ -16,15 +16,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
 from django.urls import include
-from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
     path('api/', include('news_aggregator_api.urls')),
-    path('', RedirectView.as_view(url='/api/', permanent=True)),
-
-    path('accounts/', include('django.contrib.auth.urls')),
 ]
