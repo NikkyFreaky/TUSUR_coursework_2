@@ -3,6 +3,7 @@ from ...models import News, Source, Asset, Category, Country
 from datetime import datetime
 from django.utils import timezone
 
+
 def parse_news(country):
     api_key = '238131f7f6664e22b6d625ac06847c72'
     categories = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology']
@@ -21,8 +22,10 @@ def parse_news(country):
                 'apiKey': api_key
             }
         else:
-            print(f'Не найдена страна {country}')
-            return
+            params = {
+                'category': category,
+                'apiKey': api_key
+            }
 
         response = requests.get(url, params=params)
 

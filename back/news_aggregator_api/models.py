@@ -48,6 +48,7 @@ class UserCategory(models.Model):
     user_category_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     user_category_name = models.CharField(max_length=30, help_text='Название пользовательской категории')
+    news = models.ManyToManyField('News', related_name='user_categories', blank=True)
 
     # Метаданные
     class Meta:

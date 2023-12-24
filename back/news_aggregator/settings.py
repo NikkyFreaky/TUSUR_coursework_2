@@ -37,9 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'news_aggregator_api.apps.NewsAggregatorApiConfig',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',  # тоже штука чтобы сессии
     'django.middleware.common.CommonMiddleware',
@@ -47,7 +49,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Замените это на ваш фронтенд-домен
+    "http://127.0.0.1:3000",  # Если вы используете 127.0.0.1 вместо localhost
+]
+
 
 ROOT_URLCONF = 'news_aggregator.urls'
 
@@ -123,6 +132,6 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-AUTH_USER_MODEL = 'news_aggregator_api.UserProfile'
+AUTH_USER_MODEL = 'auth.User'
 
 LOGIN_REDIRECT_URL = '/'
