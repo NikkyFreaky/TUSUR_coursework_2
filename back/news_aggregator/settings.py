@@ -30,14 +30,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',  # это штука чтобы сессии
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'news_aggregator_api.apps.NewsAggregatorApiConfig',
-    'corsheaders'
+    'news_aggregator_api.apps.NewsAggregatorApiConfig',    
 ]
 
 MIDDLEWARE = [
@@ -48,8 +48,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',   
 ]
 
 CORS_ALLOWED_ORIGINS = [

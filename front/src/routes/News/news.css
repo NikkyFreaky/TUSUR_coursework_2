@@ -1,0 +1,7 @@
+.news {
+  background-color: #f6f1ec;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}

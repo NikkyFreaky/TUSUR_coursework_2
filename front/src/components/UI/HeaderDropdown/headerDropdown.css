@@ -1,0 +1,62 @@
+.headerButtonContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.headerButton {
+  height: 20px;
+  width: 125px;
+  background-color: #ffe5d1;
+  font-weight: 400;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.headerButton:hover {
+  background-color: #fcd6b9;
+}
+
+.headerButton:active {
+  background-color: #fdc498;
+}
+
+/* Стили для выпадающего списка */
+.dropdownContent {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  z-index: 1;
+  /* Добавляем стили для прокрутки */
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.dropdownItemsWrapper {
+  /* Ограничиваем высоту и добавляем прокрутку */
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.dropdownContent a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdownContent a:hover {
+  background-color: #ddd;
+}
+
+/* Показываем выпадающий список при наведении на кнопку */
+.headerButtonContainer:hover .dropdownContent {
+  display: block;
+}
+
+/* Добавляем класс для отображения выпадающего списка */
+.headerButtonContainer.open .dropdownContent {
+  display: block;
+}

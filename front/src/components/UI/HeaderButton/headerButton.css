@@ -1,0 +1,17 @@
+.headerButton {
+  height: 20px;
+  width: 125px;
+  background-color: #ffe5d1;
+  font-weight: 400;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.headerButton:hover {
+  background-color: #fcd6b9;
+}
+
+.headerButton:active {
+  background-color: #fdc498;
+}
