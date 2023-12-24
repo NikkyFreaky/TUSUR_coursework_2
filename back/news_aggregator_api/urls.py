@@ -12,4 +12,12 @@ urlpatterns = [
     path('', views.default),
     path('scrape/', views.scrape, name='scrape'),
     path('get_news_for_country/', views.get_news_for_country, name='get_news_for_country'),  # эндпоинт для вывода новостей
+
+    path('register/', views.register, name='register'),
+    path('login/', views.login, name='login'),
+    path('logout/', views.logout, name='logout'),
+
+    path('add_news_to_category/', views.add_news_to_category, name='add_news_to_category'),
+    path('create_user_category/', views.create_user_category, name='create_user_category'),
+
 ]
