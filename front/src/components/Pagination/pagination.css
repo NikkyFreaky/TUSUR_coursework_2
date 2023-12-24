@@ -1,0 +1,38 @@
+.pagination {
+  height: 32px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  /* background-color: aqua; */
+  margin-bottom: 16px;
+}
+
+.pagination-onePage {
+  height: 32px;
+  width: 32px;
+  border-radius: 8px;
+  background: #fff;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.onePage-pageNumber {
+    font-weight: 600;
+}
+
+.pagination-onePage:hover {
+    background: #4C817C;
+    color: #fff;
+}
+
+.pagination-onePage:active {
+    background: #274240;
+    color: #fff;
+}
+
