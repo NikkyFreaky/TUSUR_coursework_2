@@ -48,6 +48,7 @@ class UserCategory(models.Model):
     user_category_id = models.AutoField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     user_category_name = models.CharField(max_length=30, help_text='Название пользовательской категории')
+    news = models.ManyToManyField('News', related_name='user_categories', blank=True)
 
     # Метаданные
     class Meta:
@@ -64,6 +65,11 @@ class Category(models.Model):
     category_name = models.CharField(max_length=50, help_text='Название категории')
 
     # Методы
+    @classmethod
+    def get_or_create_by_name(cls, name):
+        category, created = cls.objects.get_or_create(category_name=name)
+        return category
+
     def __str__(self):
         return self.category_name
     
@@ -101,8 +107,8 @@ class City(models.Model):
 class Source(models.Model):
     # Поля
     source_id = models.AutoField(primary_key=True)
-    source_name = models.CharField(max_length=50, help_text='Название источника')
-    source_link = models.CharField(max_length=100, help_text='Ссылка на источник')
+    source_name = models.CharField(max_length=500, help_text='Название источника')
+    source_link = models.CharField(max_length=1000, help_text='Ссылка на источник')
 
     # Методы
     def __str__(self):
@@ -113,10 +119,10 @@ class News(models.Model):
     # Поля
     news_id = models.AutoField(primary_key=True)
     source = models.ForeignKey('Source', on_delete=models.CASCADE)
-    title = models.CharField(max_length=50, help_text='Название новости')
-    description = models.TextField(help_text='Полный текст новости')
-    event_date = models.DateField(help_text='Дата произошедшего события')
-    publication_date = models.DateField(auto_now=True, help_text='Дата публикации')
+    title = models.CharField(max_length=50000, help_text='Название новости')
+    description = models.TextField(blank=True, null=True, help_text='Полный текст новости')
+    event_date = models.DateField(help_text='Дата произошедшего события', null=True)
+    publication_date = models.DateTimeField(help_text='Дата публикации')
     categories = models.ManyToManyField(Category, related_name='news', blank=True)
     countries = models.ManyToManyField(Country, related_name='news', blank=True)
     regions = models.ManyToManyField(Region, related_name='news', blank=True)
@@ -135,8 +141,8 @@ class Asset(models.Model):
     # Поля
     asset_id = models.AutoField(primary_key=True)
     news = models.ForeignKey(News, on_delete=models.CASCADE)
-    images = models.ImageField(null=True, blank=True, upload_to='assets/images/', help_text='Изображения приклепленные к новости')
-    videos = models.FileField(null=True, blank=True, upload_to='assets/images/', help_text='Видео приклепленные к новости')
+    images = models.CharField(max_length=1000, blank=True, null=True, help_text='Изображения приклепленные к новости')
+    videos = models.CharField(max_length=1000, blank=True, null=True, help_text='Видео приклепленные к новости')
 
 
 class Celebrity(models.Model):
