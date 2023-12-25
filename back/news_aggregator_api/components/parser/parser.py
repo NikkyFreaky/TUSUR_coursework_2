@@ -45,7 +45,7 @@ def parse_news(country):
                 link = article.get('url', '')
                 image_src = article.get('urlToImage', '')
                 source_name = article.get('source', {}).get('name', '')
-                content = article.get('content', '')
+                description = article.get('description', '')
                 published_at_string = article.get('publishedAt', '')
 
                 # Преобразуем строку с датой в объект datetime с часовым поясом UTC
@@ -61,7 +61,7 @@ def parse_news(country):
                 news, created = News.objects.get_or_create(
                     title=title,
                     source=source,
-                    description=content,
+                    description=description,
                     publication_date=published_at_datetime,
                     event_date=published_at_datetime.date(),
                     defaults={'title': title, 'source': source, 'publication_date': published_at_datetime}
