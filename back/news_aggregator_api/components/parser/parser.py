@@ -2,7 +2,7 @@ import requests
 from ...models import News, Source, Asset, Category, Country
 from datetime import datetime
 from django.utils import timezone
-
+from django.http import JsonResponse
 
 def parse_news(country):
     api_key = '238131f7f6664e22b6d625ac06847c72'
@@ -31,6 +31,9 @@ def parse_news(country):
 
         if response.status_code == 200:
             news_data = response.json()
+
+            if 'status' in news_data and news_data['status'] == 'error':
+                return JsonResponse({'error': news_data.get('message', 'Ошибка при запросе данных')}, status=500)
 
             for article in news_data.get('articles', []):
                 title = article.get('title', '')
@@ -79,4 +82,7 @@ def parse_news(country):
 
                 news.countries.add(country_obj)
 
-    print(f"Всего сохранено {total_news_saved} новостей в базу данных.")
+    if total_news_saved > 0:
+        return {'success': True, 'message': f'Всего сохранено {total_news_saved} новостей в базу данных.'}
+    else:
+        return {'success': False, 'message': 'Новые новости отсутствуют или произошла ошибка при парсинге.'}

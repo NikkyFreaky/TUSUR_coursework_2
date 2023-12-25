@@ -130,7 +130,7 @@ class News(models.Model):
 
     # Метаданные
     class Meta:
-        ordering = ["title", "-publication_date"]
+        ordering = ["-publication_date", "title"]
 
     # Методы
     def __str__(self):
