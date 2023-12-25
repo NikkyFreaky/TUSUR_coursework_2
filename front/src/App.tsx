@@ -11,7 +11,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: '/news/us',
+        path: '/news/:country',
         element: <News />,
       },
     ],

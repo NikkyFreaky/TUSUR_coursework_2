@@ -59,8 +59,6 @@ export interface IInput {
   //func
 }
 
-export interface IHeader {}
-
 export interface IHeaderButton {
   value: string;
   //func
@@ -74,4 +72,5 @@ export interface IHeaderDropdownItem {
 export interface IHeaderDropdown {
   value: string;
   items: IHeaderDropdownItem[];
+  setNewsParameter: React.Dispatch<React.SetStateAction<string>>;
 }
