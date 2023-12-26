@@ -136,9 +136,8 @@ def login(request):
 
             # Обработка неверного метода запроса
 
-        response_data = {'status': 'error', 'message': 'Invalid request method'}
-
-        return JsonResponse(response_data, status=400)
+    response_data = {'status': 'error', 'message': 'Invalid request method'}
+    return JsonResponse(response_data, status=400)
 
 
 def logout(request):
