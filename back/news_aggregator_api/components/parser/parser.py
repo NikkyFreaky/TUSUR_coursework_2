@@ -5,7 +5,7 @@ from django.utils import timezone
 from django.http import JsonResponse
 
 def parse_news(country):
-    api_key = '238131f7f6664e22b6d625ac06847c72'
+    api_key = 'c037ce11182b4d5fa7053503254f5638'
     categories = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology']
     total_news_saved = 0  # Добавим счетчик сохраненных новостей
     countries = ['ae', 'ar', 'at', 'au', 'be', 'bg', 'br', 'ca', 'ch', 'cn', 'co', 'cu', 'cz', 'de', 'eg', 'fr', 'gb',
