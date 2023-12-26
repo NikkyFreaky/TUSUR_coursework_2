@@ -15,6 +15,14 @@ export const getAllNews = async () => {
   return responce;
 };
 
+// Функция входа
+export const logInAccount = async (username: string, password: string) => {
+  const response = await axios.post(`${API_URL}/login/`, {
+    username: username,
+    password: password,
+  });
+};
+
 // Вспомогательная функция проверки паметра
 const parametercheck = (parameter: string) => {
   const countryList = [
