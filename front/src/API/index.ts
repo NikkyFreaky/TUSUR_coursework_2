@@ -28,18 +28,18 @@ export const logInAccount = async (username: string, password: string) => {
 export const registerInAccount = async (
   username: string,
   email: string,
-  name: string,
-  surname: string,
-  password: string,
-  passwordVerify: string,
+  first_name: string,
+  last_name: string,
+  password1: string,
+  password2: string,
 ) => {
   const response = await axios.post(`${API_URL}/register/`, {
     username: username,
     email: email,
-    name: name,
-    surname: surname,
-    password: password,
-    passwordVerify: passwordVerify,
+    first_name: first_name,
+    last_name: last_name,
+    password1: password1,
+    password2: password2,
   });
   return response;
 };
@@ -51,10 +51,10 @@ export const logOutAccount = async () => {
 };
 
 // запрос данных о пользователе
-export const getAccountData =async () => {
+export const getAccountData = async () => {
   const response = await axios.get(`${API_URL}/get_user_data/`);
   return response;
-}
+};
 
 // Вспомогательная функция проверки параметра при запросе новостей
 const parametercheck = (parameter: string) => {
