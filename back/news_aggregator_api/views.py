@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
-from .components.parser.parser import parse_news
-from .components.crud.get_news import get_news
-from .models import News, Country, UserProfile, User, Group, System
-from django.contrib.auth.models import Permission
+from .components.parser import parse_news
+from .components.get_news import get_news
+from .components.search_news import news_search
+from .models import UserProfile, Group, System
 from django.http import JsonResponse
 import datetime
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -52,6 +52,11 @@ def get_news_by_date(request, date):
         return JsonResponse({'success': False, 'message': 'Неправильный формат даты'})
 
     return get_news(request, date=date_filter)
+
+
+# Поиск новостей по ключевым словам
+def news_search_by_keywords(request):
+    return news_search(request)
 
 
 #  ниже простарнство для создания новых функций

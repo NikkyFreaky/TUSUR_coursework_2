@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from ...models import News
+from ..models import News
 import datetime
 
 def get_news(request, category=None, country=None, date=None):

@@ -1,5 +1,5 @@
 import requests
-from ...models import News, Source, Asset, Category, Country
+from ..models import News, Source, Asset, Category, Country
 from datetime import datetime
 from django.utils import timezone
 from django.http import JsonResponse
@@ -7,7 +7,7 @@ from django.http import JsonResponse
 def parse_news(country):
     api_key = 'c037ce11182b4d5fa7053503254f5638'
     categories = ['business', 'entertainment', 'general', 'health', 'science', 'sports', 'technology']
-    total_news_saved = 0  # Добавим счетчик сохраненных новостей
+    total_news_saved = 0
     countries = ['ae', 'ar', 'at', 'au', 'be', 'bg', 'br', 'ca', 'ch', 'cn', 'co', 'cu', 'cz', 'de', 'eg', 'fr', 'gb',
                  'gr', 'hk', 'hu', 'id', 'ie', 'il', 'in', 'it', 'jp', 'kr', 'lt', 'lv', 'ma', 'mx', 'my', 'ng', 'nl',
                  'no', 'nz', 'ph', 'pl', 'pt', 'ro', 'rs', 'ru', 'sa', 'se', 'sg', 'si', 'sk', 'th', 'tr', 'tw', 'ua',
@@ -37,10 +37,11 @@ def parse_news(country):
 
             for article in news_data.get('articles', []):
                 title = article.get('title', '')
+
                 # Проверяем, содержится ли '[Removed]' в заголовке новости
                 if '[Removed]' in title:
                     print(f"Пропущена новость с заголовком '{title}' (содержит '[Removed]')")
-                    continue  # Пропускаем текущую итерацию цикла
+                    continue
 
                 link = article.get('url', '')
                 image_src = article.get('urlToImage', '')
@@ -67,11 +68,11 @@ def parse_news(country):
                     defaults={'title': title, 'source': source, 'publication_date': published_at_datetime}
                 )
 
-                # Если новость уже существует, created будет равен False, и вы можете, например, вывести сообщение
+                # Если новость уже существует, created будет равен False
                 if not created:
                     print(f"Новость с заголовком '{title}' уже существует в базе данных.")
                 else:
-                    total_news_saved += 1  # Увеличиваем счетчик сохраненных новостей
+                    total_news_saved += 1
 
                 # Создаем и сохраняем объект Asset
                 asset = Asset.objects.create(images=image_src, news=news)

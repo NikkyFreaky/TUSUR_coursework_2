@@ -27,12 +27,6 @@ class UserProfile(models.Model):
     registration_date = models.DateField(auto_now_add=True, help_text='Дата регистрации пользователя')
     last_login = models.DateField(auto_now=True, help_text='Дата последнего входа пользователя')
 
-    '''
-     # Метаданные
-    class Meta:
-        ordering = ["-user.username", "-last_login"]
-    '''
-
      # Методы
     def __str__(self):
         if self.user.groups.filter(name='Администратор').exists():
@@ -108,7 +102,7 @@ class Source(models.Model):
     # Поля
     source_id = models.AutoField(primary_key=True)
     source_name = models.CharField(max_length=500, help_text='Название источника')
-    source_link = models.CharField(max_length=1000, help_text='Ссылка на источник')
+    source_link = models.CharField(max_length=2500, help_text='Ссылка на источник')
 
     # Методы
     def __str__(self):
