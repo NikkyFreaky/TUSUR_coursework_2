@@ -1,5 +1,6 @@
 import React, { FC, useState } from 'react';
 import Modal from './../Modal'; // Подключите ваш компонент Modal
+import { registerInAccount } from '../../API';
 import './../Modal/modal.css';
 import './registerModal.css';
 
@@ -50,7 +51,7 @@ const RegisterModal: FC<IRegisterModalProps> = ({ isOpen, onClose }) => {
             onChange={(e) => setPasswordVerify(e.target.value)}
           />
         </div>
-        <div className='registerButton'>
+        <div className="registerButton">
           <button onClick={handleLogin}>Регистрация</button>
         </div>
       </div>

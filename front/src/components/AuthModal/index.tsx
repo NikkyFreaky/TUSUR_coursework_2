@@ -1,7 +1,9 @@
 import React, { FC, useState } from 'react';
 import Modal from './../Modal'; // Подключите ваш компонент Modal
+import { logInAccount } from '../../API';
 import './../Modal/modal.css';
 import './authModal.css';
+import { log } from 'util';
 
 interface IAuthModalProps {
   isOpen: boolean;
@@ -20,6 +22,8 @@ const AuthModal: FC<IAuthModalProps> = ({
   const handleLogin = () => {
     // Реализуйте вашу логику входа с использованием login и password
     console.log('Попытка входа:', login, password);
+    const responce = logInAccount(login, password);
+    console.log(responce);
   };
 
   return (

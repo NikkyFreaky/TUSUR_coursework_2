@@ -15,15 +15,48 @@ export const getAllNews = async () => {
   return responce;
 };
 
-// Функция входа
+// Запрос входа в аккаунт
 export const logInAccount = async (username: string, password: string) => {
   const response = await axios.post(`${API_URL}/login/`, {
     username: username,
     password: password,
   });
+  return response;
 };
 
-// Вспомогательная функция проверки паметра
+// запрос регистрации
+export const registerInAccount = async (
+  username: string,
+  email: string,
+  name: string,
+  surname: string,
+  password: string,
+  passwordVerify: string,
+) => {
+  const response = await axios.post(`${API_URL}/register/`, {
+    username: username,
+    email: email,
+    name: name,
+    surname: surname,
+    password: password,
+    passwordVerify: passwordVerify,
+  });
+  return response;
+};
+
+// запрос на выход
+export const logOutAccount = async () => {
+  const response = await axios.post(`${API_URL}/logout/`);
+  return response;
+};
+
+// запрос данных о пользователе
+export const getAccountData =async () => {
+  const response = await axios.get(`${API_URL}/get_user_data/`);
+  return response;
+}
+
+// Вспомогательная функция проверки параметра при запросе новостей
 const parametercheck = (parameter: string) => {
   const countryList = [
     'ae',
