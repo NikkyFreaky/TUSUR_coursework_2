@@ -15,9 +15,11 @@ urlpatterns = [
     # Для тестов и проверки
     path('register/', views.register, name='register'),
     path('login/', views.login, name='login'),
-    path('logout/', views.logout, name='logout'),
+    path('logout/', views.logout_user, name='logout'),
+    path('get_user_data/', views.get_user_data, name='get_user_data'),
 
     path('add_news_to_category/', views.add_news_to_category, name='add_news_to_category'),
     path('create_user_category/', views.create_user_category, name='create_user_category'),
+    path('get_user_category/', views.get_user_categories, name='get_user_categories'),
 
 ]

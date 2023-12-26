@@ -2,12 +2,12 @@ from django.shortcuts import render, redirect
 from .components.parser import parse_news
 from .components.get_news import get_news
 from .components.search_news import news_search
-from .models import UserProfile, Group, System
+from .models import UserProfile, Group, System, UserCategory, News
 from django.http import JsonResponse
 import datetime
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .forms import ExtendedUserCreationForm, EmailAuthenticationForm, UserCategoryForm, AddNewsToCategoryForm
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login as auth_login, logout
 import json
 # Create your views here.
 
@@ -140,37 +140,133 @@ def login(request):
     return JsonResponse(response_data, status=400)
 
 
-def logout(request):
-    logout(request)
-    return redirect('')
-
-
-def create_user_category(request):  # РАБОТАЕТ ЧЕРЕЗ ТРИ ПИЗДЫ
+def logout_user(request):
     if request.method == 'POST':
-        form = UserCategoryForm(request.POST)
-        if form.is_valid():
-            user_category = form.save(commit=False)
-            user_category.user = request.user
-            user_category.save()
-            return redirect('../')  # замените 'user_category_list' на URL вашего списка категорий
+        try:
+            logout(request)
+            # Возвращаем успешный ответ
+            response_data = {'status': 'success', 'message': 'User logged out successfully'}
+            return JsonResponse(response_data)
+        except Exception as e:
+            # Обработка ошибок
+            print('Error during logout:', str(e))
+            response_data = {'status': 'error', 'message': 'An error occurred during logout'}
+            return JsonResponse(response_data, status=500)
     else:
-        form = UserCategoryForm()
-    return render(request, 'create_user_category.html', {'form': form})
+        # Обработка неверного метода запроса
+        response_data = {'status': 'error', 'message': 'Invalid request method'}
+        return JsonResponse(response_data, status=400)
 
 
-def add_news_to_category(request):  # РАБОТАЕТ ЧЕРЕЗ ТРИ ПИЗДЫ
+def get_user_data(request):
+    if request.user.is_authenticated:
+        user_data = {
+            'first_name': request.user.first_name,
+            'last_name': request.user.last_name,
+            'username': request.user.username,
+        }
+        return JsonResponse({'status': 'success', 'user_data': user_data})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'User is not authenticated'})
+
+
+def create_user_category(request):
     if request.method == 'POST':
-        form = AddNewsToCategoryForm(request.POST)
-        if form.is_valid():
-            user_category = form.cleaned_data['user_category']
-            news = form.cleaned_data['news']
+        try:
+            # Получаем данные из тела запроса
+            data = json.loads(request.body.decode('utf-8'))
 
-            # Добавление новости к выбранной категории
-            user_category.news.add(news)
+            # Извлекаем значения из данных
+            category_name = data.get('category_name')
 
-            return redirect('../')  # замените 'user_category_list' на URL вашего списка категорий
+            # Проверяем, существует ли категория с таким именем для данного пользователя
+            existing_category = UserCategory.objects.filter(user=request.user, category_name=category_name).first()
 
-    else:
-        form = AddNewsToCategoryForm()
+            if existing_category is None:
+                # Если категории не существует, создаем новую
+                new_category = UserCategory(user=request.user, category_name=category_name)
+                new_category.save()
 
-    return render(request, 'add_news_to_category.html', {'form': form})
+                # Пример успешного ответа
+                response_data = {'status': 'success', 'message': 'Category created successfully'}
+                return JsonResponse(response_data)
+            else:
+                # Пример ответа, если категория уже существует
+                response_data = {'status': 'error', 'message': 'Category already exists'}
+                return JsonResponse(response_data, status=400)
+        except Exception as e:
+            # Обработка ошибок
+            print('Error during category creation:', str(e))
+            response_data = {'status': 'error', 'message': 'An error occurred during category creation'}
+            return JsonResponse(response_data, status=500)
+
+    # Обработка неверного метода запроса
+    response_data = {'status': 'error', 'message': 'Invalid request method'}
+    return JsonResponse(response_data, status=400)
+
+
+def add_news_to_category(request):
+    if request.method == 'POST':
+        try:
+            # Получаем данные из тела запроса
+            data = json.loads(request.body.decode('utf-8'))
+
+            # Извлекаем значения из данных
+            category_name = data.get('category_name')
+            news_title = data.get('news_title')
+
+            # Находим категорию пользователя
+            user_category = UserCategory.objects.filter(user=request.user, category_name=category_name).first()
+
+            if user_category is not None:
+                # Находим новость по заголовку
+                news = News.objects.filter(title=news_title).first()
+
+                if news is not None:
+                    # Добавление новости к выбранной категории
+                    user_category.news.add(news)
+
+                    # Пример успешного ответа
+                    response_data = {'status': 'success', 'message': 'News added to category successfully'}
+                    return JsonResponse(response_data)
+                else:
+                    # Пример ответа, если новость не найдена
+                    response_data = {'status': 'error', 'message': 'News not found'}
+                    return JsonResponse(response_data, status=404)
+            else:
+                # Пример ответа, если категория не найдена
+                response_data = {'status': 'error', 'message': 'Category not found'}
+                return JsonResponse(response_data, status=404)
+        except Exception as e:
+            # Обработка ошибок
+            print('Error adding news to category:', str(e))
+            response_data = {'status': 'error', 'message': 'An error occurred while adding news to category'}
+            return JsonResponse(response_data, status=500)
+
+    # Обработка неверного метода запроса
+    response_data = {'status': 'error', 'message': 'Invalid request method'}
+    return JsonResponse(response_data, status=400)
+
+
+def get_user_categories(request):
+    if request.method == 'GET':
+        try:
+            # Получаем все категории пользователя
+            user_categories = UserCategory.objects.filter(user=request.user)
+
+            # Преобразуем категории в список словарей
+            categories_list = [{'id': category.id, 'name': category.category_name} for category in user_categories]
+
+            # Возвращаем список категорий в формате JSON
+            response_data = {'status': 'success', 'categories': categories_list}
+            return JsonResponse(response_data)
+        except Exception as e:
+            # Обработка ошибок
+            print('Error getting user categories:', str(e))
+            response_data = {'status': 'error', 'message': 'An error occurred while getting user categories'}
+            return JsonResponse(response_data, status=500)
+
+    # Обработка неверного метода запроса
+    response_data = {'status': 'error', 'message': 'Invalid request method'}
+    return JsonResponse(response_data, status=400)
+
