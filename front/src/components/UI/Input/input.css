@@ -1,0 +1,8 @@
+.customTextInput {
+  width: 287px;
+  height: 40px;
+  border-radius: 5px;
+  background-color: rgba(42, 102, 97, 0.1);
+  border: none; /* Убираем границу, если не требуется */
+  padding-left: 13px;
+}

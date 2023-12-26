@@ -3,6 +3,7 @@ import { Root } from './routes/Root';
 import { News } from './routes/News';
 import { ErrorPage } from './routes/ErrorPage';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { Account } from './routes/Account';
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
       {
         path: '/news/:parameters/:parameters',
         element: <News />,
+      },
+      {
+        path: '/account/',
+        element: <Account />,
       },
     ],
   },

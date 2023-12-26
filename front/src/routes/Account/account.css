@@ -1,0 +1,56 @@
+.account {
+  background-color: #f6f1ec;
+  height: calc(100vh - 140px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.container {
+}
+
+.avatarInfo {
+  /* padding-bottom: 10px; */
+}
+
+.avatarInfo__avatar {
+  height: 150px;
+  width: 150px;
+  border-radius: 50%;
+}
+
+.avatarInfo__username {
+  color: #000;
+
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.accountInfo {
+  background-color: white;
+  width: 936px;
+  height: 420px;
+  border-radius: 30px;
+}
+
+.accountInfo__container {
+  padding-left: 56px;
+  padding-top: 40px;
+}
+
+.accountInfo__labelInputPair {
+  display: flex;
+  align-items: center;
+  margin-bottom: 35px;
+}
+.inputContainer {
+  margin-left: 100px;
+}
+
+.accountInfo__buttons {
+  width: 300px;
+  display: flex;
+  justify-content: space-between;
+}
