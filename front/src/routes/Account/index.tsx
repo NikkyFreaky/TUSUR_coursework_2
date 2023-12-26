@@ -38,8 +38,8 @@ export const Account = () => {
               </div>
             </div>
             <div className="accountInfo__buttons">
-              <HeaderButton value="Сохранить" />
-              <HeaderButton value="Выйти" />
+              <HeaderButton value="Сохранить" link="" />
+              <HeaderButton value="Выйти" link="" />
             </div>
           </div>
         </div>
