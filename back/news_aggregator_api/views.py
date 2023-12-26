@@ -64,33 +64,48 @@ def news_search_by_keywords(request):
 
 def register(request):
     if request.method == 'POST':
-        form = ExtendedUserCreationForm(request.POST)
-        if form.is_valid():
-            print('register true')
-            # Создаем пользователя
-            user = form.save()
+        try:
+            # Получаем данные из тела запроса
+            data = json.loads(request.body.decode('utf-8'))
 
+            # Создаем форму с данными из запроса
+            form = ExtendedUserCreationForm(data)
 
-            user_group, created = Group.objects.get_or_create(name='Пользователь')
-            user.groups.add(user_group)
+            if form.is_valid():
+                # Создаем пользователя
+                user = form.save()
 
+                # Добавляем пользователя в группу "Пользователь"
+                user_group, created = Group.objects.get_or_create(name='Пользователь')
+                user.groups.add(user_group)
 
-            # Копируем права из группы в пользователя
-            for permission in user_group.permissions.all():
-                user.user_permissions.add(permission)
+                # Копируем права из группы в пользователя
+                for permission in user_group.permissions.all():
+                    user.user_permissions.add(permission)
 
-            system, created = System.objects.get_or_create(name='alfa test', version='0.0.1')
+                system, created = System.objects.get_or_create(name='alfa test', version='0.0.1')
 
-            # Создаем профиль пользователя
-            UserProfile.objects.create(user=user, system=system)
+                # Создаем профиль пользователя
+                UserProfile.objects.create(user=user, system=system)
 
-            auth_login(request, user)
-            return redirect('../')
-        else:
-            print('Form errors:', form.errors)
-    else:
-        form = UserCreationForm()
-    return render(request, 'registration/register.html', {'form': form})
+                auth_login(request, user)
+
+                # Пример успешного ответа
+                response_data = {'status': 'success', 'message': 'Registration successful'}
+                return JsonResponse(response_data)
+            else:
+                # Пример ответа с ошибками формы
+                response_data = {'status': 'error', 'errors': form.errors}
+                return JsonResponse(response_data, status=400)
+        except Exception as e:
+            # Обработка ошибок
+            print('Error during registration:', str(e))
+            response_data = {'status': 'error', 'message': 'An error occurred during registration'}
+            return JsonResponse(response_data, status=500)
+
+    # Обработка неверного метода запроса
+    response_data = {'status': 'error', 'message': 'Invalid request method'}
+    return JsonResponse(response_data, status=400)
 
 
 def login(request):
