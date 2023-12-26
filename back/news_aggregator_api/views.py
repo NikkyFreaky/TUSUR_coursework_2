@@ -8,9 +8,10 @@ import datetime
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .forms import ExtendedUserCreationForm, EmailAuthenticationForm, UserCategoryForm, AddNewsToCategoryForm
 from django.contrib.auth import authenticate, login as auth_login
-
+import json
 # Create your views here.
 
+# Возвращает все новости
 def default(request):
     return render(request, 'default.html')
 
@@ -58,8 +59,9 @@ def get_news_by_date(request, date):
 def news_search_by_keywords(request):
     return news_search(request)
 
-
 #  ниже простарнство для создания новых функций
+
+
 def register(request):
     if request.method == 'POST':
         form = ExtendedUserCreationForm(request.POST)
@@ -93,20 +95,35 @@ def register(request):
 
 def login(request):
     if request.method == 'POST':
-        form = EmailAuthenticationForm(request, request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
+        try:
+            # Получаем данные из тела запроса
+            data = json.loads(request.body.decode('utf-8'))
+
+            # Извлекаем значения username и password
+            username = data.get('username')
+            password = data.get('password')
             user = authenticate(request, username=username, password=password)
 
             if user is not None:
                 auth_login(request, user)
-                return redirect('../')
-        else:
-            print('Form errors:', form.errors)
-    else:
-        form = AuthenticationForm()
-    return render(request, 'registration/login.html', {'form': form})
+                return JsonResponse({'status': 'success', 'message': 'Login successful'})
+
+
+        except Exception as e:
+
+            # Обработка ошибок
+
+            print('Error during login:', str(e))
+
+            response_data = {'status': 'error', 'message': 'Invalid username or password'}
+
+            return JsonResponse(response_data, status=500)
+
+            # Обработка неверного метода запроса
+
+        response_data = {'status': 'error', 'message': 'Invalid request method'}
+
+        return JsonResponse(response_data, status=400)
 
 
 def logout(request):
