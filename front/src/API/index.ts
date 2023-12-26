@@ -1,8 +1,70 @@
 import axios from 'axios';
 import { API_URL } from '../utils/consts';
 
-export const getNews = async (region: string) => {
-  axios.get(`${API_URL}/parse/${region}`);
-  const responce = await axios.get(`${API_URL}/news/country/${region}`);
+export const getNews = async (parameter: string) => {
+  // axios.get(`${API_URL}/parse/${region}`);
+  axios.get(`${API_URL}/parse/${parametercheck(parameter)}`);
+  const responce = await axios.get(`${API_URL}/news/${parameter}`);
   return responce;
+};
+
+const parametercheck = (parameter: string) => {
+  const countryList = [
+    'ae',
+    'ar',
+    'at',
+    'au',
+    'be',
+    'bg',
+    'br',
+    'ca',
+    'ch',
+    'cn',
+    'co',
+    'cu',
+    'cz',
+    'de',
+    'eg',
+    'fr',
+    'gb',
+    'gr',
+    'hk',
+    'hu',
+    'id',
+    'ie',
+    'il',
+    'in',
+    'it',
+    'jp',
+    'kr',
+    'lt',
+    'lv',
+    'ma',
+    'mx',
+    'my',
+    'ng',
+    'nl',
+    'no',
+    'nz',
+    'ph',
+    'pl',
+    'pt',
+    'ro',
+    'rs',
+    'ru',
+    'sa',
+    'se',
+    'sg',
+    'si',
+    'sk',
+    'th',
+    'tr',
+    'tw',
+    'ua',
+    'us',
+    've',
+    'za',
+  ];
+
+  return countryList.includes(parameter) ? parameter : 'us';
 };

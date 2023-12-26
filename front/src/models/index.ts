@@ -72,5 +72,4 @@ export interface IHeaderDropdownItem {
 export interface IHeaderDropdown {
   value: string;
   items: IHeaderDropdownItem[];
-  setNewsParameter: React.Dispatch<React.SetStateAction<string>>;
 }

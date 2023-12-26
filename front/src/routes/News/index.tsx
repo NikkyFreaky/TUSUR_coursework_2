@@ -6,6 +6,8 @@ import { Pagination } from '../../components/Pagination';
 import './news.css';
 
 import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+
 
 export const News = () => {
   const [news, setNews] = useState<INewsList>();
@@ -14,20 +16,25 @@ export const News = () => {
 
   // вот эта строчка получает параметры из URL как - не разбиралась
   // получает и слава богу
-  const { country } = useParams<{ country: string }>();
+  // const { urlParams } = useParams<{ urlParams: string }>();
+  // console.log('News.tsx urlParams', useParams<{ urlParams: string }>());
+
+  const location = useLocation();
+  const urlParams = location.pathname.replace('/news/', ''); // Получаем все параметры после '/news/'
+  console.log('News.tsx urlParams', useParams<{ urlParams: string }>());
 
   useEffect(() => {
-    if (country !== undefined) {
-      getNews(country).then((res) => {
+    if (urlParams !== undefined) {
+      getNews(urlParams).then((res) => {
         setNews(res.data);
         // getPageCount(res.data.length);
-        // console.log(res.data);
+        console.log('News.tsx res.data', res.data);
       });
     } else {
       getNews('us').then((res) => {
         setNews(res.data);
         // getPageCount(res.data.length);
-        console.log(res.data);
+        console.log('News.tsx res.data', res.data);
       });
     }
   }, [currentPage]);
@@ -39,7 +46,7 @@ export const News = () => {
   //   setPages(pagesArray);
   // };
 
-  console.log(news?.news);
+  // console.log(news?.news);
   return (
     <div className="news">
       {news !== undefined && (

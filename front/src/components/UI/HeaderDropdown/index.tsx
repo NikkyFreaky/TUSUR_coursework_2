@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { IHeaderDropdown } from '../../../models';
 import './headerDropdown.css';
 
-export const HeaderDropdown: React.FC<IHeaderDropdown> = ({ value, items, setNewsParameter }) => {
+export const HeaderDropdown: React.FC<IHeaderDropdown> = ({ value, items }) => {
   // Создаем состояние для отслеживания открытости/закрытости выпадающего списка
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
@@ -14,7 +14,6 @@ export const HeaderDropdown: React.FC<IHeaderDropdown> = ({ value, items, setNew
   // Обработчик клика по элементу выпадающего списка
   const handleDropdownItemClick = (itemHref: string) => {
     // Закрываем выпадающий список
-    setNewsParameter(itemHref);
     setDropdownOpen(false);
   };
 
@@ -29,7 +28,11 @@ export const HeaderDropdown: React.FC<IHeaderDropdown> = ({ value, items, setNew
           {/* Добавляем стили для прокрутки и отображения только 8 элементов */}
           <div className="dropdownItemsWrapper">
             {items.map((item, index) => (
-              <a key={index} href={item.href} onClick={(e) => handleDropdownItemClick(item.href)}>
+              <a
+                key={index}
+                href={item.href}
+                onClick={(e) => handleDropdownItemClick}
+              >
                 {item.text}
               </a>
             ))}

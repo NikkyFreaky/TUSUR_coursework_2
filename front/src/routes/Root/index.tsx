@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './header.css';
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 import avatar from '../../assets/avatar.jpg';
 import { ReactComponent as Logo } from '../../assets/search_icon.svg';
@@ -13,15 +13,15 @@ import {
 } from './dropdownContent';
 
 export const Root = () => {
-  const [newsParameter, setNewsParameter] = useState<string>('us');
+  
   return (
     <div className="mainPage">
       <div className="navbar">
         <div className="navbar-content">
           <div className="contentTop">
-            <Link to="/news/us" className="contentTop__title">
+            <div className="contentTop__title">
               NewsBazar
-            </Link>
+            </div>
             <div className="contentTop__search">
               <Logo />
               <input
@@ -42,17 +42,14 @@ export const Root = () => {
               <HeaderDropdown
                 value="По стране"
                 items={dropdownItemsCountry}
-                setNewsParameter={setNewsParameter}
               />
               <HeaderDropdown
                 value="По категориям"
                 items={dropdownItemsCategory}
-                setNewsParameter={setNewsParameter}
               />
               <HeaderDropdown
                 value="По дате"
                 items={dropdownItemsTime}
-                setNewsParameter={setNewsParameter}
               />
               <HeaderButton value="Текст" />
             </div>
