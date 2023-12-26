@@ -3,7 +3,6 @@ import Modal from './../Modal'; // Подключите ваш компонен�
 import { logInAccount } from '../../API';
 import './../Modal/modal.css';
 import './authModal.css';
-import { log } from 'util';
 
 interface IAuthModalProps {
   isOpen: boolean;

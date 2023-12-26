@@ -11,12 +11,32 @@ interface IRegisterModalProps {
 
 const RegisterModal: FC<IRegisterModalProps> = ({ isOpen, onClose }) => {
   const [login, setLogin] = useState('');
-  const [password, setPassword] = useState('');
-  const [passwordVerify, setPasswordVerify] = useState('');
+  const [email, setEmail] = useState('');
+  const [first_name, setName] = useState('');
+  const [last_name, setSurname] = useState('');
+  const [password1, setPassword1] = useState('');
+  const [password2, setPassword2] = useState('');
 
   const handleLogin = () => {
     // Реализуйте вашу логику регистрации с использованием login и password
-    console.log('Попытка регистрации:', login, password, passwordVerify);
+    console.log(
+      'Попытка регистрации:',
+      login,
+      email,
+      first_name,
+      last_name,
+      password1,
+      password2,
+    );
+    const responce = registerInAccount(
+      login,
+      email,
+      first_name,
+      last_name,
+      password1,
+      password2,
+    );
+    console.log(responce);
   };
 
   return (
@@ -34,21 +54,48 @@ const RegisterModal: FC<IRegisterModalProps> = ({ isOpen, onClose }) => {
           />
         </div>
         <div className="labelInputPair">
+          <label htmlFor="email">E-mail:</label>
+          <input
+            type="text"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div className="labelInputPair">
+          <label htmlFor="name">Имя:</label>
+          <input
+            type="text"
+            id="name"
+            value={first_name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div className="labelInputPair">
+          <label htmlFor="surname">Фамилия:</label>
+          <input
+            type="text"
+            id="surname"
+            value={last_name}
+            onChange={(e) => setSurname(e.target.value)}
+          />
+        </div>
+        <div className="labelInputPair">
           <label htmlFor="password">Пароль:</label>
           <input
             type="password"
             id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={password1}
+            onChange={(e) => setPassword1(e.target.value)}
           />
         </div>
         <div className="labelInputPair">
-          <label htmlFor="passwordVerify">Подтвердите пароль:</label>
+          <label htmlFor="password2">Подтвердите пароль:</label>
           <input
             type="password"
-            id="passwordVerify"
-            value={passwordVerify}
-            onChange={(e) => setPasswordVerify(e.target.value)}
+            id="password2"
+            value={password2}
+            onChange={(e) => setPassword2(e.target.value)}
           />
         </div>
         <div className="registerButton">
