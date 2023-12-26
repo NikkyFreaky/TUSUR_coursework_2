@@ -11,17 +11,24 @@ import {
   dropdownItemsTime,
   dropdownItemsCategory,
 } from './dropdownContent';
+import Modal from '../../components/Modal';
 
 export const Root = () => {
-  
+  // функции работы с модальным окном
+  const [isModalOpen, setModalOpen] = useState(false);
+  const openModal = () => {
+    setModalOpen(true);
+  };
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
   return (
     <div className="mainPage">
       <div className="navbar">
         <div className="navbar-content">
           <div className="contentTop">
-            <div className="contentTop__title">
-              NewsBazar
-            </div>
+            <div className="contentTop__title">NewsBazar</div>
             <div className="contentTop__search">
               <Logo />
               <input
@@ -30,6 +37,7 @@ export const Root = () => {
                 placeholder="Ключевые слова..."
               />
             </div>
+            <button onClick={openModal}>Вход</button>
             <img className="avatar__img" src={avatar} alt="avatar" />
           </div>
           <div className="contentBottom">
@@ -39,18 +47,12 @@ export const Root = () => {
               <HeaderButton value="Текст" />
             </div>
             <div className="contentBottom__right">
-              <HeaderDropdown
-                value="По стране"
-                items={dropdownItemsCountry}
-              />
+              <HeaderDropdown value="По стране" items={dropdownItemsCountry} />
               <HeaderDropdown
                 value="По категориям"
                 items={dropdownItemsCategory}
               />
-              <HeaderDropdown
-                value="По дате"
-                items={dropdownItemsTime}
-              />
+              <HeaderDropdown value="По дате" items={dropdownItemsTime} />
               <HeaderButton value="Текст" />
             </div>
           </div>
@@ -59,6 +61,9 @@ export const Root = () => {
       <div id="detail">
         <Outlet />
       </div>
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        {/* ... Ваш контент модального окна ... */}
+      </Modal>
     </div>
   );
 };
