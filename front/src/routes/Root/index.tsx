@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, KeyboardEvent } from 'react';
 import './header.css';
-import { Link, Outlet } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 import avatar from '../../assets/avatar.jpg';
 import { ReactComponent as Logo } from '../../assets/search_icon.svg';
@@ -11,8 +11,11 @@ import {
   dropdownItemsTime,
   dropdownItemsCategory,
 } from './dropdownContent';
+
+// импорты модалок
 import Modal from '../../components/Modal';
-import { Account } from '../Account';
+import AuthModal from '../../components/AuthModal';
+import RegisterModal from '../../components/RegisterModal';
 
 export const Root = () => {
   // функции работы с модалкой входа
@@ -33,6 +36,19 @@ export const Root = () => {
     setRegisterModalOpen(false);
   };
 
+  // для отправки инпута по энтеру
+  const [searchValue, setSearchValue] = useState('');
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      // Вызовите вашу функцию по нажатию Enter
+      handleSearch();
+    }
+  };
+  const handleSearch = () => {
+    // Ваша функция по обработке поиска
+    console.log('Выполняется поиск с запросом:', searchValue);
+  };
+
   return (
     <div className="mainPage">
       <div className="navbar">
@@ -47,6 +63,9 @@ export const Root = () => {
                 className="search__input"
                 type="text"
                 placeholder="Ключевые слова..."
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                onKeyDown={handleKeyDown}
               />
             </div>
             <button onClick={openLoginModal}>Вход</button>
@@ -61,18 +80,26 @@ export const Root = () => {
               items={dropdownItemsCategory}
             />
             <HeaderDropdown value="По дате" items={dropdownItemsTime} />
-            
           </div>
         </div>
       </div>
       <div id="detail">
         <Outlet />
       </div>
+      {/* модальное окно входа в аккаунт */}
       <Modal isOpen={isLoginModalOpen} onClose={closeLoginModal}>
-        {/* ... Ваш контент модального окна ... */}
+        <AuthModal
+          isOpen={isLoginModalOpen}
+          onClose={closeLoginModal}
+          switchToRegister={openRegisterModal}
+        />
       </Modal>
+      {/* модальное окно регистрации */}
       <Modal isOpen={isRegisterModalOpen} onClose={closeRegisterModal}>
-        {/* ... Ваш контент модального окна ... */}
+        <RegisterModal
+          isOpen={isRegisterModalOpen}
+          onClose={closeRegisterModal}
+        />
       </Modal>
     </div>
   );
