@@ -26,8 +26,9 @@ class UserProfile(models.Model):
     groups = models.ManyToManyField(Group, blank=True, help_text='Системный доступ пользователя')
     registration_date = models.DateField(auto_now_add=True, help_text='Дата регистрации пользователя')
     last_login = models.DateField(auto_now=True, help_text='Дата последнего входа пользователя')
-
+    is_blocked = models.BooleanField(default=False)
      # Методы
+
     def __str__(self):
         if self.user.groups.filter(name='Администратор').exists():
             return f"Администратор - {self.user.username} (Last login: {self.last_login})"

@@ -117,6 +117,13 @@ def login(request):
             # Извлекаем значения username и password
             username = data.get('username')
             password = data.get('password')
+
+            # а не в бане ли у нас пользователь
+            user_profile = UserProfile.objects.filter(user__username=username).first()
+
+            if user_profile and user_profile.is_blocked:
+                return JsonResponse({'status': 'error', 'message': 'User is banned'})
+
             user = authenticate(request, username=username, password=password)
 
             if user is not None:
