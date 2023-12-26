@@ -4,7 +4,6 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  /* background-color: aqua; */
   margin-bottom: 16px;
 }
 
@@ -13,26 +12,27 @@
   width: 32px;
   border-radius: 8px;
   background: #fff;
-
   display: flex;
   justify-content: center;
   align-items: center;
-
   margin-right: 5px;
   cursor: pointer;
+  border: 1px solid #4C817C; /* Добавляем границу */
 }
 
 .onePage-pageNumber {
-    font-weight: 600;
+  font-weight: 600;
+  color: #4C817C; /* Цвет номера страницы */
 }
 
 .pagination-onePage:hover {
-    background: #4C817C;
-    color: #fff;
+  background: #4C817C;
+  color: #fff;
+  border-color: #4C817C; /* Изменяем цвет границы при наведении */
 }
 
 .pagination-onePage:active {
-    background: #274240;
-    color: #fff;
+  background: #274240;
+  color: #fff;
+  border-color: #274240; /* Изменяем цвет границы при активации */
 }
-

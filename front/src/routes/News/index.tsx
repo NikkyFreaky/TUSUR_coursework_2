@@ -5,8 +5,7 @@ import { getAllNews, getNews } from '../../API';
 import { Pagination } from '../../components/Pagination';
 import './news.css';
 
-import { useParams } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { redirect, useLocation } from 'react-router-dom';
 
 export const News = () => {
   const [news, setNews] = useState<INewsList>();
@@ -25,22 +24,24 @@ export const News = () => {
     ) {
       getAllNews().then((res) => {
         setNews(res.data);
-        // getPageCount(res.data.length);
+
+        getPageCount(res.data.news.length);
       });
     } else {
       getNews(urlParams).then((res) => {
         setNews(res.data);
-        // getPageCount(res.data.length);
+        console.log(res.data);
+        getPageCount(res.data.news.length);
       });
     }
   }, [currentPage]);
 
-  // const getPageCount = (count: number) => {
-  //   const pageCount = Math.ceil(count / 10);
-  //   const pagesArray = [];
-  //   for (let i = 1; i <= pageCount; i++) pagesArray.push(i);
-  //   setPages(pagesArray);
-  // };
+  const getPageCount = (count: number) => {
+    const pageCount = Math.ceil(count / 10);
+    const pagesArray = [];
+    for (let i = 1; i <= pageCount; i++) pagesArray.push(i);
+    setPages(pagesArray);
+  };
 
   return (
     <div className="news">
@@ -50,6 +51,8 @@ export const News = () => {
             message={news.message}
             news={news.news}
             success={news.success}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
           />
         </div>
       )}
