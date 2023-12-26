@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
+
 from .components.parser import parse_news
 from .components.get_news import get_news
 from .components.search_news import news_search
@@ -61,7 +63,7 @@ def news_search_by_keywords(request):
 
 #  ниже простарнство для создания новых функций
 
-
+@csrf_exempt
 def register(request):
     if request.method == 'POST':
         try:
@@ -107,7 +109,7 @@ def register(request):
     response_data = {'status': 'error', 'message': 'Invalid request method'}
     return JsonResponse(response_data, status=400)
 
-
+@csrf_exempt
 def login(request):
     if request.method == 'POST':
         try:
@@ -146,7 +148,7 @@ def login(request):
     response_data = {'status': 'error', 'message': 'Invalid request method'}
     return JsonResponse(response_data, status=400)
 
-
+@csrf_exempt
 def logout_user(request):
     if request.method == 'POST':
         try:
@@ -164,7 +166,7 @@ def logout_user(request):
         response_data = {'status': 'error', 'message': 'Invalid request method'}
         return JsonResponse(response_data, status=400)
 
-
+@csrf_exempt
 def get_user_data(request):
     if request.user.is_authenticated:
         user_data = {
@@ -176,7 +178,7 @@ def get_user_data(request):
     else:
         return JsonResponse({'status': 'error', 'message': 'User is not authenticated'})
 
-
+@csrf_exempt
 def create_user_category(request):
     if request.method == 'POST':
         try:
@@ -211,7 +213,7 @@ def create_user_category(request):
     response_data = {'status': 'error', 'message': 'Invalid request method'}
     return JsonResponse(response_data, status=400)
 
-
+@csrf_exempt
 def add_news_to_category(request):
     if request.method == 'POST':
         try:
@@ -254,7 +256,7 @@ def add_news_to_category(request):
     response_data = {'status': 'error', 'message': 'Invalid request method'}
     return JsonResponse(response_data, status=400)
 
-
+@csrf_exempt
 def get_user_categories(request):
     if request.method == 'GET':
         try:
