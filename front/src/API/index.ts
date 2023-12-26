@@ -1,13 +1,21 @@
 import axios from 'axios';
 import { API_URL } from '../utils/consts';
 
+// Запрос новостей по параметру категории/дате/стране
 export const getNews = async (parameter: string) => {
-  // axios.get(`${API_URL}/parse/${region}`);
   axios.get(`${API_URL}/parse/${parametercheck(parameter)}`);
   const responce = await axios.get(`${API_URL}/news/${parameter}`);
   return responce;
 };
 
+// Запрос всех новостей с АПИ
+export const getAllNews = async () => {
+  axios.get(`${API_URL}/parse/us`);
+  const responce = await axios.get(`${API_URL}/news`);
+  return responce;
+};
+
+// Вспомогательная функция проверки паметра
 const parametercheck = (parameter: string) => {
   const countryList = [
     'ae',

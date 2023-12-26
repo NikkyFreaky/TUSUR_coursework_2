@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { IHeaderDropdown } from '../../../models';
 import './headerDropdown.css';
 
@@ -8,7 +8,8 @@ export const HeaderDropdown: React.FC<IHeaderDropdown> = ({ value, items }) => {
 
   // Обработчик клика по кнопке
   const handleButtonClick = () => {
-    setDropdownOpen(!isDropdownOpen);
+    // Закрываем все выпадающие списки перед открытием текущего
+    setDropdownOpen(true);
   };
 
   // Обработчик клика по элементу выпадающего списка
@@ -16,6 +17,33 @@ export const HeaderDropdown: React.FC<IHeaderDropdown> = ({ value, items }) => {
     // Закрываем выпадающий список
     setDropdownOpen(false);
   };
+
+  const handleDocumentClick = (event: MouseEvent) => {
+    const dropdownContainers = document.querySelectorAll(
+      '.headerButtonContainer',
+    );
+    let isInsideAnyDropdown = false;
+
+    dropdownContainers.forEach((dropdownContainer) => {
+      if (dropdownContainer.contains(event.target as Node)) {
+        isInsideAnyDropdown = true;
+      }
+    });
+
+    // Закрываем все выпадающие списки, если клик был вне любого из них
+    if (!isInsideAnyDropdown) {
+      setDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleDocumentClick);
+
+    // Отписываемся от обработчика при размонтировании компонента
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  }, []);
 
   return (
     <div className={`headerButtonContainer ${isDropdownOpen ? 'open' : ''}`}>

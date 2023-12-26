@@ -61,7 +61,7 @@ export interface IInput {
 
 export interface IHeaderButton {
   value: string;
-  //func
+  link: string;
 }
 
 export interface IHeaderDropdownItem {

@@ -1,0 +1,55 @@
+Запрос на вход
+
+const response = await axios.post('127.0.0.1:8000/api/login/', {
+      username: /* значение из формы */,
+      password: /* значение из формы */,
+    });
+
+
+
+Запрос на регу
+
+    const response = await axios.post('127.0.0.1:8000/api/register/', {
+      username: /* значение из формы */,
+      email: /* значение из формы */,
+      name: /* значение из формы */,
+      surname: /* значение из формы */,
+      password1: /* значение из формы */,
+      password2: /* значение из формы */,
+    });
+
+
+
+Запрос на выход из акка
+
+const response = await axios.post('127.0.0.1:8000/api/logout/');
+
+
+
+Запрос на получение данных о пользователе
+
+const response = await axios.get('127.0.0.1:8000/api/get_user_data/');
+
+
+
+Запрос на создание пользовательской категории
+
+    const response = await axios.post('127.0.0.1:8000/api/create_user_category/', {
+      category_name: categoryName,
+    });
+
+
+
+Запрос на добавление нововсти в пользовательскую категорию
+
+    const response = await axios.post('127.0.0.1:8000/api/add_news_to_category/', {
+      category_name: categoryName,
+      news_title: newsTitle,
+    });
+
+
+
+Запрос на получение всех пользовательских категорий
+
+    const response = await axios.get('127.0.0.1:8000/api/get_user_category/');
+

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './header.css';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 
 import avatar from '../../assets/avatar.jpg';
 import { ReactComponent as Logo } from '../../assets/search_icon.svg';
@@ -12,15 +12,25 @@ import {
   dropdownItemsCategory,
 } from './dropdownContent';
 import Modal from '../../components/Modal';
+import { Account } from '../Account';
 
 export const Root = () => {
-  // функции работы с модальным окном
-  const [isModalOpen, setModalOpen] = useState(false);
-  const openModal = () => {
-    setModalOpen(true);
+  // функции работы с модалкой входа
+  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
+  const openLoginModal = () => {
+    setLoginModalOpen(true);
   };
-  const closeModal = () => {
-    setModalOpen(false);
+  const closeLoginModal = () => {
+    setLoginModalOpen(false);
+  };
+
+  // функции работы с модалкой реги
+  const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
+  const openRegisterModal = () => {
+    setRegisterModalOpen(true);
+  };
+  const closeRegisterModal = () => {
+    setRegisterModalOpen(false);
   };
 
   return (
@@ -28,7 +38,9 @@ export const Root = () => {
       <div className="navbar">
         <div className="navbar-content">
           <div className="contentTop">
-            <div className="contentTop__title">NewsBazar</div>
+            <a href="/news/" className="contentTop__title">
+              NewsBazar
+            </a>
             <div className="contentTop__search">
               <Logo />
               <input
@@ -37,31 +49,29 @@ export const Root = () => {
                 placeholder="Ключевые слова..."
               />
             </div>
-            <button onClick={openModal}>Вход</button>
+            <button onClick={openLoginModal}>Вход</button>
+            <button onClick={openRegisterModal}>Регистрация</button>
             <img className="avatar__img" src={avatar} alt="avatar" />
           </div>
           <div className="contentBottom">
-            <div className="contentBottom__left">
-              <HeaderButton value="Главная" />
-              <HeaderButton value="Аккаунт" />
-              <HeaderButton value="Текст" />
-            </div>
-            <div className="contentBottom__right">
-              <HeaderDropdown value="По стране" items={dropdownItemsCountry} />
-              <HeaderDropdown
-                value="По категориям"
-                items={dropdownItemsCategory}
-              />
-              <HeaderDropdown value="По дате" items={dropdownItemsTime} />
-              <HeaderButton value="Текст" />
-            </div>
+            <HeaderButton value="Аккаунт" link="/account/" />
+            <HeaderDropdown value="По стране" items={dropdownItemsCountry} />
+            <HeaderDropdown
+              value="По категориям"
+              items={dropdownItemsCategory}
+            />
+            <HeaderDropdown value="По дате" items={dropdownItemsTime} />
+            
           </div>
         </div>
       </div>
       <div id="detail">
         <Outlet />
       </div>
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
+      <Modal isOpen={isLoginModalOpen} onClose={closeLoginModal}>
+        {/* ... Ваш контент модального окна ... */}
+      </Modal>
+      <Modal isOpen={isRegisterModalOpen} onClose={closeRegisterModal}>
         {/* ... Ваш контент модального окна ... */}
       </Modal>
     </div>

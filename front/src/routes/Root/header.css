@@ -26,7 +26,7 @@
   color: #2a6661;
   margin-left: 50px;
   cursor: pointer;
-  text-decoration:none;
+  text-decoration: none;
 }
 
 .contentTop__search {
@@ -69,21 +69,8 @@
 .contentBottom {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   margin-top: 30px;
-}
-
-.contentBottom__left {
-  padding-right: 20px;
-  width: 440px;
-  border-right: 1px solid #ffb47e;
-  display: flex;
-  justify-content: space-between;
-}
-
-.contentBottom__right {
-  width: 560px;
-  padding-left: 20px;
-  display: flex;
-  justify-content: space-between;
+  margin-left: 450px;
+  width: 800px;
 }
