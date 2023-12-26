@@ -10,6 +10,7 @@ urlpatterns = [
     path('news/category/<str:category>/', views.get_news_by_category, name='get_news_by_category'),
     path('news/country/<str:country>/', views.get_news_by_country, name='get_news_by_country'),
     path('news/date/<str:date>/', views.get_news_by_date, name='get_news_by_date'),
+    path('news/search/', views.news_search_by_keywords, name='news_search_by_keywords'),
    
     # Для тестов и проверки
     path('register/', views.register, name='register'),
