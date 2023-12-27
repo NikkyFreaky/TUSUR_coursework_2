@@ -19,7 +19,7 @@ export const NewsElement: React.FC<props> = ({ article }) => {
         article.assets.images !== undefined ? (
           <img src={article.assets.images} alt="Картинка" />
         ) : (
-          <img src={placeholder} alt="Заменитель" />
+          <img src={placeholder} alt="Картинка" />
         )}
       </div>
       <div className="article-card__main-info">
