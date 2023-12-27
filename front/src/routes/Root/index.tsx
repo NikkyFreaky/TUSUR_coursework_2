@@ -58,6 +58,11 @@ export const Root = () => {
   };
 
   // аутентификация, состояние входа в аккаунт и стор
+  const isAuthenticated = useStoreMap({
+    store: isAuthenticatedStore,
+    keys: [],
+    fn: (store) => store,
+  });
 
   return (
     <div className="mainPage">
@@ -78,7 +83,7 @@ export const Root = () => {
                 onKeyDown={handleKeyDown}
               />
             </div>
-            <button onClick={openLoginModal}>Регистрация и вход</button>
+            <button onClick={openLoginModal}>Вход</button>
             {/* <button onClick={openRegisterModal}>Регистрация</button> */}
             {/* <img className="avatar__img" src={avatar} alt="avatar" /> */}
           </div>
@@ -90,6 +95,11 @@ export const Root = () => {
               items={dropdownItemsCategory}
             />
             <HeaderDropdown value="По дате" items={dropdownItemsTime} />
+            {/* добавить проверку на вход */}
+            <HeaderDropdown
+              value="Пользовательские"
+              items={dropdownItemsTime}
+            />
           </div>
         </div>
       </div>
