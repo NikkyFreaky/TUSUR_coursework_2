@@ -17,6 +17,14 @@ import Modal from '../../components/Modal';
 import AuthModal from '../../components/AuthModal';
 import RegisterModal from '../../components/RegisterModal';
 
+// импорты аутентификации
+import { useStoreMap } from 'effector-react';
+import {
+  loginEvent,
+  logoutEvent,
+  isAuthenticatedStore,
+} from './../../store/authStore';
+
 export const Root = () => {
   // функции работы с модалкой входа
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
@@ -49,6 +57,8 @@ export const Root = () => {
     console.log('Выполняется поиск с запросом:', searchValue);
   };
 
+  // аутентификация, состояние входа в аккаунт и стор
+
   return (
     <div className="mainPage">
       <div className="navbar">
@@ -68,9 +78,9 @@ export const Root = () => {
                 onKeyDown={handleKeyDown}
               />
             </div>
-            <button onClick={openLoginModal}>Вход</button>
-            <button onClick={openRegisterModal}>Регистрация</button>
-            <img className="avatar__img" src={avatar} alt="avatar" />
+            <button onClick={openLoginModal}>Регистрация и вход</button>
+            {/* <button onClick={openRegisterModal}>Регистрация</button> */}
+            {/* <img className="avatar__img" src={avatar} alt="avatar" /> */}
           </div>
           <div className="contentBottom">
             <HeaderButton value="Аккаунт" link="/account/" />
