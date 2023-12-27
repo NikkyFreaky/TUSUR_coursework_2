@@ -97,8 +97,9 @@ def register(request):
                 return JsonResponse(response_data)
             else:
                 # Пример ответа с ошибками формы
+                print(form.errors)
                 response_data = {'status': 'error', 'errors': form.errors}
-                return JsonResponse(response_data, status=400)
+                return JsonResponse(response_data)
         except Exception as e:
             # Обработка ошибок
             print('Error during registration:', str(e))
@@ -106,47 +107,50 @@ def register(request):
             return JsonResponse(response_data, status=500)
 
     # Обработка неверного метода запроса
-    response_data = {'status': 'error', 'message': 'Invalid request method'}
-    return JsonResponse(response_data, status=400)
+    else:
+        response_data = {'status': 'error', 'message': 'Invalid request method'}
+        return JsonResponse(response_data, status=400)
 
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
         try:
-            # Получаем данные из тела запроса
-            data = json.loads(request.body.decode('utf-8'))
+            # Используем нашу форму для обработки данных
+            form = EmailAuthenticationForm(request, json.loads(request.body.decode('utf-8')))
 
-            # Извлекаем значения username и password
-            username = data.get('username')
-            password = data.get('password')
+            if form.is_valid():
+                username = form.cleaned_data['username']
+                password = form.cleaned_data['password']
 
-            # а не в бане ли у нас пользователь
-            user_profile = UserProfile.objects.filter(user__username=username).first()
+                user_profile = UserProfile.objects.filter(user__username=username).first()
 
-            if user_profile and user_profile.is_blocked:
-                return JsonResponse({'status': 'error', 'message': 'User is banned'})
+                if user_profile and user_profile.is_blocked:
+                    return JsonResponse({'status': 'error', 'message': 'User is banned'})
 
-            user = authenticate(request, username=username, password=password)
-
-            if user is not None:
-                auth_login(request, user)
-                return JsonResponse({'status': 'success', 'message': 'Login successful'})
-
+                user = authenticate(request, username=username, password=password)
+                if user is not None:
+                    auth_login(request, user)
+                    if request.user.is_authenticated and not user_profile.is_online:
+                        user_profile.is_online = True
+                        user_profile.save()
+                        return JsonResponse({'status': 'success', 'message': 'Login successful'})
+                    else:
+                        return JsonResponse({'status': 'error', 'message': 'User is alredy logined'})
+            else:
+                print(form.errors)
+                return JsonResponse({'status': 'error', 'message': form.errors})
 
         except Exception as e:
-
             # Обработка ошибок
-
             print('Error during login:', str(e))
-
-            response_data = {'status': 'error', 'message': 'Invalid username or password'}
-
+            response_data = {'status': 'error', 'message': 'i dont now what happened blyat'}
             return JsonResponse(response_data, status=500)
 
-            # Обработка неверного метода запроса
-
-    response_data = {'status': 'error', 'message': 'Invalid request method'}
-    return JsonResponse(response_data, status=400)
+    # Обработка неверного метода запроса
+    else:
+        print(request.method)
+        response_data = {'status': 'error', 'message': 'Invalid request method'}
+        return JsonResponse(response_data, status=400)
 
 @csrf_exempt
 def logout_user(request):
@@ -154,6 +158,12 @@ def logout_user(request):
         try:
             logout(request)
             # Возвращаем успешный ответ
+            user_profile = UserProfile.objects.get(user=request.user)
+
+            # Обновляем статус "онлайн" на False
+            user_profile.is_online = False
+            user_profile.save()
+
             response_data = {'status': 'success', 'message': 'User logged out successfully'}
             return JsonResponse(response_data)
         except Exception as e:

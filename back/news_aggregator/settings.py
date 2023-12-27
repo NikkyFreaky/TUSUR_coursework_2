@@ -134,3 +134,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'auth.User'
 
 LOGIN_REDIRECT_URL = '/'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+
+]

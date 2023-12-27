@@ -27,6 +27,7 @@ class UserProfile(models.Model):
     registration_date = models.DateField(auto_now_add=True, help_text='Дата регистрации пользователя')
     last_login = models.DateField(auto_now=True, help_text='Дата последнего входа пользователя')
     is_blocked = models.BooleanField(default=False)
+    is_online = models.BooleanField(default=False)
      # Методы
 
     def __str__(self):
