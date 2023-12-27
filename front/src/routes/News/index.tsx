@@ -30,7 +30,7 @@ export const News = () => {
     } else {
       getNews(urlParams).then((res) => {
         setNews(res.data);
-        console.log(res.data);
+        // console.log(res.data);
         getPageCount(res.data.news.length);
       });
     }

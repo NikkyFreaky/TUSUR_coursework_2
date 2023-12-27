@@ -24,9 +24,25 @@ const AuthModal: FC<IAuthModalProps> = ({
   const handleLogin = () => {
     logInAccount(login, password)
       .then((responce) => {
-        if (responce.status === 200) {
+        if (
+          responce.data.__all__.includes(
+            'Please enter a correct username and password. Note that both fields may be case-sensitive.',
+          )
+        ) {
+          setAuth(false);
+          console.log(
+            'Auth failed with error ',
+            'Please enter a correct username and password. Note that both fields may be case-sensitive.',
+          );
+          setShowNotification(true);
+          setNotificationText('Неправильные логин или пароль');
+          setTimeout(() => {
+            setShowNotification(false);
+          }, 3000);
+        }
+        else if (responce.status === 200) {
           setAuth(true);
-          console.log('Auth successfull with status', responce.status);
+          console.log('Auth successfull with status', responce);
           setShowNotification(true);
           setNotificationText('Успешный вход');
           setTimeout(() => {
