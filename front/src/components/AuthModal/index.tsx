@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react';
 import Modal from './../Modal'; // Подключите ваш компонент Modal
 import { logInAccount } from '../../API';
+import Notification from '../Notification';
 import './../Modal/modal.css';
 import './authModal.css';
 
@@ -18,12 +19,35 @@ const AuthModal: FC<IAuthModalProps> = ({
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
 
+  const [auth, setAuth] = useState<boolean>(false);
+
   const handleLogin = () => {
-    // Реализуйте вашу логику входа с использованием login и password
-    console.log('Попытка входа:', login, password);
-    const responce = logInAccount(login, password);
-    console.log(responce);
+    logInAccount(login, password)
+      .then((responce) => {
+        if (responce.status === 200) {
+          setAuth(true);
+          console.log('Auth successfull with status', responce.status);
+          setShowNotification(true);
+          setNotificationText('Успешный вход');
+          setTimeout(() => {
+            setShowNotification(false);
+            onClose(); // Закрытие модального окна после уведомления
+          }, 3000);
+        }
+      })
+      .catch((error) => {
+        console.log('Auth failed with error: ', error);
+        setShowNotification(true);
+        setNotificationText('Неверные данные входа');
+        setTimeout(() => {
+          setShowNotification(false);
+        }, 3000);
+      });
   };
+
+  // всплывающее уведомление
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationText, setNotificationText] = useState('');
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -62,6 +86,12 @@ const AuthModal: FC<IAuthModalProps> = ({
           </span>
         </div>
       </div>
+      {showNotification && (
+        <Notification
+          text={notificationText}
+          onClose={() => setShowNotification(false)}
+        />
+      )}
     </Modal>
   );
 };

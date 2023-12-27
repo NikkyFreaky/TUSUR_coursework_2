@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react';
 import Modal from './../Modal'; // Подключите ваш компонент Modal
 import { registerInAccount } from '../../API';
+import Notification from '../Notification';
 import './../Modal/modal.css';
 import './registerModal.css';
 
@@ -17,27 +18,36 @@ const RegisterModal: FC<IRegisterModalProps> = ({ isOpen, onClose }) => {
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
 
+  const [auth, setAuth] = useState<boolean>(false);
+
   const handleLogin = () => {
-    // Реализуйте вашу логику регистрации с использованием login и password
-    console.log(
-      'Попытка регистрации:',
-      login,
-      email,
-      first_name,
-      last_name,
-      password1,
-      password2,
-    );
-    const responce = registerInAccount(
-      login,
-      email,
-      first_name,
-      last_name,
-      password1,
-      password2,
-    );
-    console.log(responce);
+    
+    registerInAccount(login, email, first_name, last_name, password1, password2)
+      .then((responce) => {
+        if (responce.status === 200) {
+          setAuth(true);
+          console.log('Auth successfull with status', responce.status);
+          setShowNotification(true);
+          setNotificationText('Успешная регистрация');
+          setTimeout(() => {
+            setShowNotification(false);
+            onClose(); // Закрытие модального окна после уведомления
+          }, 3000);
+        }
+      })
+      .catch((error) => {
+        console.log('Auth failed with error: ', error);
+        setShowNotification(true);
+        setNotificationText('Неверные данные регистрации');
+        setTimeout(() => {
+          setShowNotification(false);
+        }, 3000);
+      });
   };
+
+  // всплывающее уведомление
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationText, setNotificationText] = useState('');
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -102,6 +112,12 @@ const RegisterModal: FC<IRegisterModalProps> = ({ isOpen, onClose }) => {
           <button onClick={handleLogin}>Регистрация</button>
         </div>
       </div>
+      {showNotification && (
+        <Notification
+          text={notificationText}
+          onClose={() => setShowNotification(false)}
+        />
+      )}
     </Modal>
   );
 };
