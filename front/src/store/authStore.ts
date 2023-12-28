@@ -44,9 +44,3 @@ export const userStore = combine({
   email: emailStore,
   isAuth: isAuthenticatedStore,
 });
-
-// использование
-// updateName('John');
-// updateSurname('Doe');
-// updateLogin('john_doe');
-// updateEmail('john@example.com');

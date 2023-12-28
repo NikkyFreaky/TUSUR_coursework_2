@@ -19,7 +19,7 @@ import RegisterModal from '../../components/RegisterModal';
 
 // импорты стора
 import { useStoreMap } from 'effector-react';
-import { userStore, loginEvent, logoutEvent } from './../../store/authStore';
+import { userStore, loginEvent, logoutEvent} from './../../store/authStore';
 
 export const Root = () => {
   const navigate = useNavigate();
@@ -55,7 +55,7 @@ export const Root = () => {
     console.log('Выполняется поиск с запросом:', searchValue);
   };
 
-  // аутентификация, состояние входа в аккаунт и стор
+  //стор
   const isAuth = useStoreMap({
     store: userStore,
     keys: ['isAuth'],

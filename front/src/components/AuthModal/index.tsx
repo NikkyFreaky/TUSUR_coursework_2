@@ -1,9 +1,18 @@
 import React, { FC, useState } from 'react';
 import Modal from './../Modal'; // Подключите ваш компонент Modal
-import { logInAccount } from '../../API';
+import { logInAccount, getAccountData } from '../../API';
 import Notification from '../Notification';
 import './../Modal/modal.css';
 import './authModal.css';
+
+// импорты для стора
+import {
+  updateName,
+  updateSurname,
+  updateLogin,
+  updateEmail,
+  loginEvent,
+} from './../../store/authStore';
 
 interface IAuthModalProps {
   isOpen: boolean;
@@ -19,19 +28,22 @@ const AuthModal: FC<IAuthModalProps> = ({
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
 
-  const [auth, setAuth] = useState<boolean>(false);
-
   const handleLogin = () => {
     logInAccount(login, password)
       .then((responce) => {
-        console.log(responce.data);
         // успешный вход
         if (responce.data.status === 'success') {
-          setAuth(true);
-          console.log(
-            'Login successfull with message: ',
-            responce.data.message,
-          );
+          // ВОТ ЭТО НАДО ПРОВЕРИТЬ
+          // вроде как при входе на сервер отправляется запрос на получение данных о юзере
+          // закидываем эти данные в стор
+          loginEvent();
+          getAccountData().then((res) => console.log(res));
+          // getAccountData().then((res) => {
+          //   updateName(first_name);
+          // updateSurname(last_name);
+          // updateLogin(login);
+          // updateEmail(email);});
+
           setShowNotification(true);
           setNotificationText('Успешный вход');
           setTimeout(() => {
@@ -41,7 +53,6 @@ const AuthModal: FC<IAuthModalProps> = ({
         }
         // Пустое поле/поля
         else if (responce.data.message === 'This field is required.') {
-          console.log('Login failed with message: ', responce.data.message);
           setShowNotification(true);
           setNotificationText('Все поля обязательны к заполнению');
           setTimeout(() => {
@@ -50,7 +61,6 @@ const AuthModal: FC<IAuthModalProps> = ({
         }
         // Юзер в бане
         else if (responce.data.message === 'User is banned') {
-          console.log('Login failed with message: ', responce.data.message);
           setShowNotification(true);
           setNotificationText('Пользователь в черном списке');
           setTimeout(() => {
@@ -62,7 +72,6 @@ const AuthModal: FC<IAuthModalProps> = ({
           responce.data.message ===
           'Please enter a correct username and password'
         ) {
-          console.log('Login failed with message: ', responce.data.message);
           setShowNotification(true);
           setNotificationText('Введен неверный логин или пароль');
           setTimeout(() => {
@@ -71,7 +80,6 @@ const AuthModal: FC<IAuthModalProps> = ({
         }
         // обработка на всякий случай. Не знаю, как на неё выйти
         else {
-          console.log('Login failed, i dont know what happened');
           setShowNotification(true);
           setNotificationText('Некорректные данные регистрации');
           setTimeout(() => {
@@ -80,7 +88,6 @@ const AuthModal: FC<IAuthModalProps> = ({
         }
       })
       .catch((error) => {
-        console.log('Login failed with error: ', error);
         setShowNotification(true);
         setNotificationText('Неверные данные входа');
         setTimeout(() => {

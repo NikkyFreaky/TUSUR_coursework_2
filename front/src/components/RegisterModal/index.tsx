@@ -28,19 +28,18 @@ const RegisterModal: FC<IRegisterModalProps> = ({ isOpen, onClose }) => {
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
 
-  const [auth, setAuth] = useState<boolean>(false);
-
   const handleLogin = () => {
     registerInAccount(login, email, first_name, last_name, password1, password2)
       .then((responce) => {
-        console.log(responce.data);
         // успешная регистрация
         if (responce.data.status === 'success') {
-          setAuth(true);
-          console.log(
-            'Registration successfull with message: ',
-            responce.data.message,
-          );
+
+          updateName(first_name);
+          updateSurname(last_name);
+          updateLogin(login);
+          updateEmail(email);
+          loginEvent();
+
           setShowNotification(true);
           setNotificationText('Успешная регистрация');
           setTimeout(() => {
@@ -50,10 +49,6 @@ const RegisterModal: FC<IRegisterModalProps> = ({ isOpen, onClose }) => {
         }
         // хоть одно из полей пустое
         else if (responce.data.message === 'This field is required.') {
-          console.log(
-            'Registration failed with message: ',
-            responce.data.message,
-          );
           setShowNotification(true);
           setNotificationText('Все поля обязательны к заполнению');
           setTimeout(() => {
@@ -62,10 +57,6 @@ const RegisterModal: FC<IRegisterModalProps> = ({ isOpen, onClose }) => {
         }
         // регистрация с распространенным паролем
         else if (responce.data.message === 'This password is too common.') {
-          console.log(
-            'Registration failed with message: ',
-            responce.data.message,
-          );
           setShowNotification(true);
           setNotificationText(
             'Данный пароль является слишком распространенным',
@@ -78,10 +69,6 @@ const RegisterModal: FC<IRegisterModalProps> = ({ isOpen, onClose }) => {
         else if (
           responce.data.message === 'A user with that username already exists.'
         ) {
-          console.log(
-            'Registration failed with message: ',
-            responce.data.message,
-          );
           setShowNotification(true);
           setNotificationText('Данный логин уже используется');
           setTimeout(() => {
@@ -92,10 +79,6 @@ const RegisterModal: FC<IRegisterModalProps> = ({ isOpen, onClose }) => {
         else if (
           responce.data.message === 'The two password fields didn’t match.'
         ) {
-          console.log(
-            'Registration failed with message: ',
-            responce.data.message,
-          );
           setShowNotification(true);
           setNotificationText('Пароль и проверка пароля не совпадают');
           setTimeout(() => {
@@ -104,7 +87,6 @@ const RegisterModal: FC<IRegisterModalProps> = ({ isOpen, onClose }) => {
         }
         // обработка на всякий случай. Не знаю, как на неё выйти
         else {
-          console.log('Registration failed, i dont know what happened');
           setShowNotification(true);
           setNotificationText('Некорректные данные регистрации');
           setTimeout(() => {
@@ -113,7 +95,6 @@ const RegisterModal: FC<IRegisterModalProps> = ({ isOpen, onClose }) => {
         }
       })
       .catch((error) => {
-        console.log('Auth failed with error: ', error);
         setShowNotification(true);
         setNotificationText('Неверные данные регистрации');
         setTimeout(() => {
@@ -121,12 +102,6 @@ const RegisterModal: FC<IRegisterModalProps> = ({ isOpen, onClose }) => {
         }, 3000);
       });
   };
-
-  // updateName(first_name);
-  // updateSurname(last_name);
-  // updateLogin(login);
-  // updateEmail(email);
-  // loginEvent();
 
   // всплывающее уведомление
   const [showNotification, setShowNotification] = useState(false);
