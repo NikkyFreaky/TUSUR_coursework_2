@@ -98,8 +98,17 @@ def register(request):
             else:
                 # Пример ответа с ошибками формы
                 print(form.errors)
-                response_data = {'status': 'error', 'errors': form.errors}
-                return JsonResponse(response_data)
+                if 'This password is too common.' in str(form.errors):
+                    return JsonResponse({'status': 'error', 'message': 'This password is too common.'})
+                elif 'A user with that username already exists.' in str(form.errors):
+                    return JsonResponse({'status': 'error', 'message': 'A user with that username already exists.'})
+                elif 'The two password fields didn’t match.' in str(form.errors):
+                    return JsonResponse({'status': 'error', 'message': 'The two password fields didn’t match.'})
+                elif 'This field is required.' in str(form.errors):
+                    return JsonResponse({'status': 'error', 'message': 'This field is required.'})
+                else:
+                    return JsonResponse({'status': 'error', 'message': 'Unknow error'})
+
         except Exception as e:
             # Обработка ошибок
             print('Error during registration:', str(e))
@@ -138,7 +147,13 @@ def login(request):
                         return JsonResponse({'status': 'error', 'message': 'User is alredy logined'})
             else:
                 print(form.errors)
-                return JsonResponse({'status': 'error', 'message': form.errors})
+
+                if 'This field is required.' in str(form.errors):
+                    return JsonResponse({'status': 'error', 'message': 'This field is required.'})
+                elif "Please enter a correct username and password. Note that both fields may be case-sensitive." in str(form.errors):
+                    return JsonResponse({'status': 'error', 'message': 'Please enter a correct username and password'})
+                else:
+                    return JsonResponse({'status': 'error', 'message': 'Unknow error'})
 
         except Exception as e:
             # Обработка ошибок
