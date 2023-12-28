@@ -22,4 +22,6 @@ urlpatterns = [
     path('create_user_category/', views.create_user_category, name='create_user_category'),
     path('get_user_category/', views.get_user_categories, name='get_user_categories'),
 
+    path('check_online/', views.check_online, name='check_online'),
+
 ]

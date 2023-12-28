@@ -11,16 +11,20 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from .forms import ExtendedUserCreationForm, EmailAuthenticationForm, UserCategoryForm, AddNewsToCategoryForm
 from django.contrib.auth import authenticate, login as auth_login, logout
 import json
+
+
 # Create your views here.
 
 # Возвращает все новости
 def default(request):
     return render(request, 'default.html')
 
+
 # Парсим новости по стране
 def parse_news_by_country(request, country):
     response = parse_news(country)
     return JsonResponse(response, safe=False)
+
 
 # Возвращает все новости
 def get_all_news(request):
@@ -60,6 +64,7 @@ def get_news_by_date(request, date):
 # Поиск новостей по ключевым словам
 def news_search_by_keywords(request):
     return news_search(request)
+
 
 #  ниже простарнство для создания новых функций
 
@@ -120,6 +125,7 @@ def register(request):
         response_data = {'status': 'error', 'message': 'Invalid request method'}
         return JsonResponse(response_data, status=400)
 
+
 @csrf_exempt
 def login(request):
     if request.method == 'POST':
@@ -150,7 +156,8 @@ def login(request):
 
                 if 'This field is required.' in str(form.errors):
                     return JsonResponse({'status': 'error', 'message': 'This field is required.'})
-                elif "Please enter a correct username and password. Note that both fields may be case-sensitive." in str(form.errors):
+                elif "Please enter a correct username and password. Note that both fields may be case-sensitive." in str(
+                        form.errors):
                     return JsonResponse({'status': 'error', 'message': 'Please enter a correct username and password'})
                 else:
                     return JsonResponse({'status': 'error', 'message': 'Unknow error'})
@@ -166,6 +173,7 @@ def login(request):
         print(request.method)
         response_data = {'status': 'error', 'message': 'Invalid request method'}
         return JsonResponse(response_data, status=400)
+
 
 @csrf_exempt
 def logout_user(request):
@@ -191,6 +199,7 @@ def logout_user(request):
         response_data = {'status': 'error', 'message': 'Invalid request method'}
         return JsonResponse(response_data, status=400)
 
+
 @csrf_exempt
 def get_user_data(request):
     if request.user.is_authenticated:
@@ -202,6 +211,7 @@ def get_user_data(request):
         return JsonResponse({'status': 'success', 'user_data': user_data})
     else:
         return JsonResponse({'status': 'error', 'message': 'User is not authenticated'})
+
 
 @csrf_exempt
 def create_user_category(request):
@@ -237,6 +247,7 @@ def create_user_category(request):
     # Обработка неверного метода запроса
     response_data = {'status': 'error', 'message': 'Invalid request method'}
     return JsonResponse(response_data, status=400)
+
 
 @csrf_exempt
 def add_news_to_category(request):
@@ -281,6 +292,7 @@ def add_news_to_category(request):
     response_data = {'status': 'error', 'message': 'Invalid request method'}
     return JsonResponse(response_data, status=400)
 
+
 @csrf_exempt
 def get_user_categories(request):
     if request.method == 'GET':
@@ -304,3 +316,22 @@ def get_user_categories(request):
     response_data = {'status': 'error', 'message': 'Invalid request method'}
     return JsonResponse(response_data, status=400)
 
+
+@csrf_exempt
+def check_online(request):
+    try:
+        # Получаем текущего пользователя
+        user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+
+        # Проверяем статус "онлайн"
+        is_online = getattr(user_profile, 'is_online', False)
+
+        # Возвращаем ответ с текущим статусом "онлайн"
+        response_data = {'status': 'success', 'is_online': is_online}
+        return JsonResponse(response_data)
+
+    except Exception as e:
+        # Обработка ошибок
+        print('Error during online check:', str(e))
+        response_data = {'status': 'error', 'message': 'An error occurred during online check'}
+        return JsonResponse(response_data, status=500)
