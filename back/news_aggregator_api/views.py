@@ -1,3 +1,5 @@
+from django.contrib.auth.models import User
+from django.contrib.sessions.models import Session
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
@@ -148,7 +150,22 @@ def login(request):
                     if request.user.is_authenticated:
                         user_profile.is_online = True
                         user_profile.save()
-                        return JsonResponse({'status': 'success', 'message': 'Login successful'})
+                        django_session = Session.objects.get(session_key=request.session.session_key)
+
+                        # Пример успешного ответа с куками сессии
+                        response_data = {
+                            'status': 'success',
+                            'message': 'Login successful',
+                            'sessionid': django_session.session_key,
+                            'session_expire_at': django_session.expire_date.timestamp(),
+                        }
+                        response = JsonResponse(response_data)
+
+                        # Устанавливаем куки сессии в ответе
+                        response.set_cookie('sessionid', django_session.session_key, expires=django_session.expire_date, secure=False, httponly=False)
+
+                        return response
+
                     else:
                         return JsonResponse({'status': 'error', 'message': 'User is alredy logined'})
             else:
@@ -179,14 +196,19 @@ def login(request):
 def logout_user(request):
     if request.method == 'POST':
         try:
-            logout(request)
+            # Получаем данные из тела запроса
+            data = json.loads(request.body.decode('utf-8'))
+
+            # Извлекаем sessionid из данных запроса
+            session_id_from_request = data.get('sessionid')
+
+            # Выводим sessionid в консоль (можно использовать print для вывода в консоль)
+            print(f'Session ID from request: {session_id_from_request}')
+
+            # Завершаем сеанс пользователя с использованием переданного sessionid
+            Session.objects.filter(session_key=session_id_from_request).delete()
+
             # Возвращаем успешный ответ
-            user_profile = UserProfile.objects.get(user=request.user)
-
-            # Обновляем статус "онлайн" на False
-            user_profile.is_online = False
-            user_profile.save()
-
             response_data = {'status': 'success', 'message': 'User logged out successfully'}
             return JsonResponse(response_data)
         except Exception as e:
@@ -202,15 +224,40 @@ def logout_user(request):
 
 @csrf_exempt
 def get_user_data(request):
-    if request.user.is_authenticated:
-        user_data = {
-            'first_name': request.user.first_name,
-            'last_name': request.user.last_name,
-            'username': request.user.username,
-        }
-        return JsonResponse({'status': 'success', 'user_data': user_data})
+    if request.method == 'POST':
+        try:
+            # Получаем данные из тела запроса
+            data = json.loads(request.body.decode('utf-8'))
+
+            # Извлекаем sessionid из данных запроса
+            session_id_from_request = data.get('sessionid')
+
+            # Получаем объект сессии по переданному sessionid
+            session = Session.objects.get(session_key=session_id_from_request)
+
+            # Получаем пользователя из сессии
+            user_id = session.get_decoded().get('_auth_user_id')
+            user = User.objects.get(pk=user_id)
+
+            # Формируем данные о пользователе
+            user_data = {
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'username': user.username,
+                'email': user.email,
+            }
+
+            return JsonResponse({'status': 'success', 'user_data': user_data})
+        except Session.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Session does not exist'}, status=404)
+        except Exception as e:
+            # Обработка других ошибок
+            print('Error during user data retrieval:', str(e))
+            return JsonResponse({'status': 'error', 'message': 'An error occurred during user data retrieval'}, status=500)
     else:
-        return JsonResponse({'status': 'error', 'message': 'User is not authenticated'})
+        # Обработка неверного метода запроса
+        response_data = {'status': 'error', 'message': 'Invalid request method'}
+        return JsonResponse(response_data, status=400)
 
 
 @csrf_exempt
