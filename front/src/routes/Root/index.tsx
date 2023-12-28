@@ -1,6 +1,6 @@
 import React, { useState, KeyboardEvent } from 'react';
 import './header.css';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 import avatar from '../../assets/avatar.jpg';
 import { ReactComponent as Logo } from '../../assets/search_icon.svg';
@@ -17,15 +17,13 @@ import Modal from '../../components/Modal';
 import AuthModal from '../../components/AuthModal';
 import RegisterModal from '../../components/RegisterModal';
 
-// импорты аутентификации
+// импорты стора
 import { useStoreMap } from 'effector-react';
-import {
-  loginEvent,
-  logoutEvent,
-  isAuthenticatedStore,
-} from './../../store/authStore';
+import { userStore, loginEvent, logoutEvent } from './../../store/authStore';
 
 export const Root = () => {
+  const navigate = useNavigate();
+
   // функции работы с модалкой входа
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const openLoginModal = () => {
@@ -58,10 +56,10 @@ export const Root = () => {
   };
 
   // аутентификация, состояние входа в аккаунт и стор
-  const isAuthenticated = useStoreMap({
-    store: isAuthenticatedStore,
-    keys: [],
-    fn: (store) => store,
+  const isAuth = useStoreMap({
+    store: userStore,
+    keys: ['isAuth'],
+    fn: (state) => state.isAuth,
   });
 
   return (
@@ -83,9 +81,16 @@ export const Root = () => {
                 onKeyDown={handleKeyDown}
               />
             </div>
-            <button onClick={openLoginModal}>Вход</button>
-            {/* <button onClick={openRegisterModal}>Регистрация</button> */}
-            {/* <img className="avatar__img" src={avatar} alt="avatar" /> */}
+            {isAuth !== true ? (
+              <button onClick={openLoginModal}>Вход</button>
+            ) : (
+              <img
+                className="avatar__img"
+                src={avatar}
+                alt="avatar"
+                onClick={(e) => navigate('/account/')}
+              />
+            )}
           </div>
           <div className="contentBottom">
             <HeaderButton value="Аккаунт" link="/account/" />
@@ -95,16 +100,16 @@ export const Root = () => {
               items={dropdownItemsCategory}
             />
             <HeaderDropdown value="По дате" items={dropdownItemsTime} />
-            {/* добавить проверку на вход */}
-            <HeaderDropdown
-              value="Пользовательские"
-              items={dropdownItemsTime}
-            />
+            {isAuth === true ? (
+              <HeaderDropdown
+                value="Пользовательские"
+                items={dropdownItemsTime}
+              />
+            ) : (
+              <div></div>
+            )}
           </div>
         </div>
-      </div>
-      <div id="detail">
-        <Outlet />
       </div>
       {/* модальное окно входа в аккаунт */}
       <Modal isOpen={isLoginModalOpen} onClose={closeLoginModal}>
@@ -119,8 +124,13 @@ export const Root = () => {
         <RegisterModal
           isOpen={isRegisterModalOpen}
           onClose={closeRegisterModal}
+          // loginEvent={loginEvent}
         />
       </Modal>
+
+      <div id="detail">
+        <Outlet />
+      </div>
     </div>
   );
 };

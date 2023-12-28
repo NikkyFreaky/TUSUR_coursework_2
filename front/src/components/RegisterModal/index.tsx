@@ -5,9 +5,19 @@ import Notification from '../Notification';
 import './../Modal/modal.css';
 import './registerModal.css';
 
+// импорты для стора
+import {
+  updateName,
+  updateSurname,
+  updateLogin,
+  updateEmail,
+  loginEvent,
+} from './../../store/authStore';
+
 interface IRegisterModalProps {
   isOpen: boolean;
   onClose: () => void;
+  // loginEvent: EventCallable<void>;
 }
 
 const RegisterModal: FC<IRegisterModalProps> = ({ isOpen, onClose }) => {
@@ -21,29 +31,46 @@ const RegisterModal: FC<IRegisterModalProps> = ({ isOpen, onClose }) => {
   const [auth, setAuth] = useState<boolean>(false);
 
   const handleLogin = () => {
-    
-    registerInAccount(login, email, first_name, last_name, password1, password2)
-      .then((responce) => {
-        if (responce.status === 200) {
-          setAuth(true);
-          console.log('Auth successfull with status', responce.status);
-          setShowNotification(true);
-          setNotificationText('Успешная регистрация');
-          setTimeout(() => {
-            setShowNotification(false);
-            onClose(); // Закрытие модального окна после уведомления
-          }, 3000);
-        }
-      })
-      .catch((error) => {
-        console.log('Auth failed with error: ', error);
-        setShowNotification(true);
-        setNotificationText('Неверные данные регистрации');
-        setTimeout(() => {
-          setShowNotification(false);
-        }, 3000);
-      });
+    registerInAccount(
+      login,
+      email,
+      first_name,
+      last_name,
+      password1,
+      password2,
+    ).then((responce) => console.log(responce.data));
   };
+
+  // updateName(first_name);
+  // updateSurname(last_name);
+  // updateLogin(login);
+  // updateEmail(email);
+  // loginEvent();
+
+  // const handleLogin = () => {
+
+  //   registerInAccount(login, email, first_name, last_name, password1, password2)
+  //     .then((responce) => {
+  //       if (responce.status === 200) {
+  //         setAuth(true);
+  //         console.log('Auth successfull with status', responce.status);
+  //         setShowNotification(true);
+  //         setNotificationText('Успешная регистрация');
+  //         setTimeout(() => {
+  //           setShowNotification(false);
+  //           onClose(); // Закрытие модального окна после уведомления
+  //         }, 3000);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.log('Auth failed with error: ', error);
+  //       setShowNotification(true);
+  //       setNotificationText('Неверные данные регистрации');
+  //       setTimeout(() => {
+  //         setShowNotification(false);
+  //       }, 3000);
+  //     });
+  // };
 
   // всплывающее уведомление
   const [showNotification, setShowNotification] = useState(false);

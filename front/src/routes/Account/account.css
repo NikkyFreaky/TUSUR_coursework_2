@@ -6,16 +6,10 @@
   align-items: center;
   justify-content: center;
 }
-.container {
-}
-
-.avatarInfo {
-  /* padding-bottom: 10px; */
-}
 
 .avatarInfo__avatar {
-  height: 150px;
-  width: 150px;
+  height: 200px;
+  width: 200px;
   border-radius: 50%;
 }
 
@@ -26,16 +20,20 @@
   font-style: normal;
   font-weight: 600;
   line-height: normal;
+  margin-bottom: 50px;
 }
 
 .accountInfo {
   background-color: white;
   width: 936px;
-  height: 420px;
+  height: 200px;
   border-radius: 30px;
 }
 
 .accountInfo__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding-left: 56px;
   padding-top: 40px;
 }

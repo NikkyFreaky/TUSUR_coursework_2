@@ -14,33 +14,12 @@ export const Account = () => {
         <div className="accountInfo">
           <div className="accountInfo__container">
             <div className="accountInfo__labelInputPair">
-              <label>Имя</label>
-              <div className="inputContainer">
-                <CustomTextInput />
-              </div>
+              <label>E-mail</label>
             </div>
             <div className="accountInfo__labelInputPair">
               <label>Логин</label>
-              <div className="inputContainer">
-                <CustomTextInput />
-              </div>
             </div>
-            <div className="accountInfo__labelInputPair">
-              <label>Новый пароль</label>
-              <div className="inputContainer">
-                <CustomTextInput />
-              </div>
-            </div>
-            <div className="accountInfo__labelInputPair">
-              <label>Подтверждение</label>
-              <div className="inputContainer">
-                <CustomTextInput />
-              </div>
-            </div>
-            <div className="accountInfo__buttons">
-              <HeaderButton value="Сохранить" link="" />
-              <HeaderButton value="Выйти" link="" />
-            </div>
+            <HeaderButton value="Выйти" link="" />
           </div>
         </div>
       </div>

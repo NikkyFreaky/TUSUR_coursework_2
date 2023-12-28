@@ -1,0 +1,63 @@
+у меня че бывает, че мне надо обрабатывать
+
+ЭТО ВСЕ .DATA ОТВЕТА
+
+При входе
+1) Успешный вход
+
+{status: 'success', message: 'Login successful'}
+
+
+
+2) Юзер в бане
+
+{status: 'error', message: 'User is banned'}
+
+
+
+3) Пустое поле/поля
+
+{status: 'error', message: "This field is required."}
+
+
+4) Неверный логин/пароль
+
+{status: 'error', message: "Please enter a correct username and password"}
+
+
+
+5) если в message будет unknow error - это как тогда с кодом ошибки 500. вообще возникнуть не должно, но на всякий случай...
+
+
+
+При реге
+1) Успешная рега
+
+{status: 'success', message: 'Registration successful'}
+
+
+
+2) Распространенный пароль
+
+{status: 'error', message: 'This password is too common.'}
+
+
+
+3) Повторяющийся логин
+
+{status: 'error', message: 'A user with that username already exists.'}
+
+
+
+4) Несовпадение пароля и проверки пароля
+
+{status: 'error', message: 'The two password fields didn’t match.'}
+
+
+
+5) хоть одно из username, email, password1, password 2 пустое, то
+
+{'status': 'error', 'message': 'This field is required.'}
+
+
+5a) если в message будет unknow error - это как тогда с кодом ошибки 500. вообще возникнуть не должно, но на всякий случай...
