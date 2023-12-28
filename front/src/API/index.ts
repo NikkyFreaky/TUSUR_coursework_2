@@ -4,9 +4,22 @@ import { updateCookie } from '../store/authStore';
 
 // Запрос новостей по параметру категории/дате/стране
 export const getNews = async (parameter: string) => {
-  axios.get(`${API_URL}/parse/${parametercheck(parameter)}`);
-  const responce = await axios.get(`${API_URL}/news/${parameter}`);
-  return responce;
+  const checkForSearch = parameter.split('/')[0];
+  console.log('API getNews parse parameter: ', parameter);
+  if (checkForSearch === 'search') {
+    // http://127.0.0.1:8000/api/news/search/
+    const keyword = parameter.split('/')[1];
+    // console.log('API getNews keyword: ', keyword);
+
+    const headers = { q: keyword };
+    // const responce = await axios.get(`${API_URL}/news/${parameter}`);
+    const responce = await axios.get(`${API_URL}/news/search/`, { headers });
+    return responce;
+  } else {
+    axios.get(`${API_URL}/parse/${parametercheck(parameter)}`);
+    const responce = await axios.get(`${API_URL}/news/${parameter}`);
+    return responce;
+  }
 };
 
 // Запрос всех новостей с АПИ
@@ -18,20 +31,13 @@ export const getAllNews = async () => {
 
 // Запрос входа в аккаунт
 export const logInAccount = async (username: string, password: string) => {
-  const response = await axios.post(
-    `${API_URL}/login/`,
-    {
-      username: username,
-      password: password,
-    },
-
-  );
+  const response = await axios.post(`${API_URL}/login/`, {
+    username: username,
+    password: password,
+  });
   //Set-Cookie
-    console.log('pizdec: ', response.data.sessionid);
-    localStorage.setItem('cookie', response.data.sessionid);
-
-
-
+  console.log('API logInAccount sessionid: ', response.data.sessionid);
+  localStorage.setItem('cookie', response.data.sessionid);
 
   return response;
 };
@@ -73,15 +79,17 @@ export const registerInAccount = async (
 // запрос на выход
 export const logOutAccount = async () => {
   // Получаем куки из localStorage
-    const response = await axios.post(`${API_URL}/logout/`, {sessionid: localStorage.getItem('cookie')});
-
+  const response = await axios.post(`${API_URL}/logout/`, {
+    sessionid: localStorage.getItem('cookie'),
+  });
+  console.log('API logOutAccount responce: ', response);
   return response;
 };
 
 // запрос данных о пользователе
 export const getAccountData = async () => {
-  const headers = {sessionid: localStorage.getItem('cookie')};
-  const response = await axios.get(`${API_URL}/get_user_data/`, {headers});
+  const headers = { sessionid: localStorage.getItem('cookie') };
+  const response = await axios.get(`${API_URL}/get_user_data/`, { headers });
   return response;
 };
 
@@ -89,7 +97,7 @@ export const getAccountData = async () => {
 // http://127.0.0.1:8000/api/news/search/
 export const getSearchResult = async (keyword: string) => {
   const headers = { q: keyword };
-  const response = await axios.get(`${API_URL}/news/search/`, { headers });
+  const response = await axios.get(`${API_URL}/news/search/?q=` + keyword);
   return response;
 };
 

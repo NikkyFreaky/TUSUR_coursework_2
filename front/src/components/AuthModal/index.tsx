@@ -33,16 +33,17 @@ const AuthModal: FC<IAuthModalProps> = ({
       .then((responce) => {
         // успешный вход
         if (responce.data.status === 'success') {
-          // ВОТ ЭТО НАДО ПРОВЕРИТЬ
           // вроде как при входе на сервер отправляется запрос на получение данных о юзере
           // закидываем эти данные в стор
           localStorage.setItem('isAuth', JSON.stringify(true));
-          //getAccountData().then((res) => console.log(res));
-          // getAccountData().then((res) => {
-          //   updateName(first_name);
-          // updateSurname(last_name);
-          // updateLogin(login);
-          // updateEmail(email);});
+          getAccountData()
+            .then((res) => {
+              localStorage.setItem('name', res.data.name);
+              localStorage.setItem('surname', res.data.surname);
+              localStorage.setItem('login', res.data.login);
+              localStorage.setItem('email', res.data.email);
+            })
+            .catch((e) => console.log('AuthModal getAccountData error: ', e));
 
           setShowNotification(true);
           setNotificationText('Успешный вход');

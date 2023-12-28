@@ -16,10 +16,7 @@ import {
 import Modal from '../../components/Modal';
 import AuthModal from '../../components/AuthModal';
 import RegisterModal from '../../components/RegisterModal';
-import { getSearchResult } from '../../API';
-import { error } from 'console';
 
-// импорты стора
 
 export const Root = () => {
   const navigate = useNavigate();
@@ -53,15 +50,17 @@ export const Root = () => {
   };
   const handleSearch = () => {
     // Ваша функция по обработке поиска
-    console.log('Выполняется поиск с запросом:', searchValue);
-    getSearchResult(searchValue)
-      .then((res) => {
-        console.log('ROOT handleSearch searchValue: ', searchValue);
-        navigate('/news/' + searchValue);
-      })
-      .catch((error) => {
-        console.log('ROOT handleSearch error: ', error);
-      });
+    console.log('ROOT handleSearch searchValue: ', searchValue);
+    navigate('/news/search/' + searchValue);
+    //window.location.reload();
+    // getSearchResult(searchValue)
+    //   .then((res) => {
+    //     console.log('ROOT handleSearch searchValue: ', searchValue);
+    //     navigate('/news/search/' + searchValue);
+    //   })
+    //   .catch((error) => {
+    //     console.log('ROOT handleSearch error: ', error);
+    //   });
   };
 
   //стор
