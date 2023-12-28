@@ -50,6 +50,12 @@ export const logOutAccount = async () => {
   return response;
 };
 
+// запрос о войденности юзера в аккаунт на бэке
+export const isUserEntered = async () => {
+  const response = await axios.get(`${API_URL}/check_online/`);
+  return response;
+};
+
 // запрос данных о пользователе
 export const getAccountData = async () => {
   const response = await axios.get(`${API_URL}/get_user_data/`);
