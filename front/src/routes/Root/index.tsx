@@ -19,7 +19,7 @@ import RegisterModal from '../../components/RegisterModal';
 
 // импорты стора
 import { useStoreMap } from 'effector-react';
-import { userStore, loginEvent, logoutEvent} from './../../store/authStore';
+import { userStore } from './../../store/authStore';
 
 export const Root = () => {
   const navigate = useNavigate();
@@ -56,11 +56,11 @@ export const Root = () => {
   };
 
   //стор
-  const isAuth = useStoreMap({
-    store: userStore,
-    keys: ['isAuth'],
-    fn: (state) => state.isAuth,
-  });
+  const storedIsAuth = localStorage.getItem('isAuth');
+  const initialIsAuth = storedIsAuth ? JSON.parse(storedIsAuth) : false;
+
+  // console.log('stored', storedIsAuth);
+  // console.log('initial', initialIsAuth);
 
   return (
     <div className="mainPage">
@@ -81,7 +81,7 @@ export const Root = () => {
                 onKeyDown={handleKeyDown}
               />
             </div>
-            {isAuth !== true ? (
+            {initialIsAuth !== true ? (
               <button onClick={openLoginModal}>Вход</button>
             ) : (
               <img
@@ -100,7 +100,7 @@ export const Root = () => {
               items={dropdownItemsCategory}
             />
             <HeaderDropdown value="По дате" items={dropdownItemsTime} />
-            {isAuth === true ? (
+            {initialIsAuth === true ? (
               <HeaderDropdown
                 value="Пользовательские"
                 items={dropdownItemsTime}

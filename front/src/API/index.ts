@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_URL } from '../utils/consts';
+import { updateCookie } from '../store/authStore';
 
 // Запрос новостей по параметру категории/дате/стране
 export const getNews = async (parameter: string) => {
@@ -21,6 +22,12 @@ export const logInAccount = async (username: string, password: string) => {
     username: username,
     password: password,
   });
+
+  const cookies = response.headers['set-cookie'];
+  if (cookies) {
+    updateCookie(cookies);
+  }
+
   return response;
 };
 
@@ -41,6 +48,12 @@ export const registerInAccount = async (
     password1: password1,
     password2: password2,
   });
+
+  const cookies = response.headers['set-cookie'];
+  if (cookies) {
+    updateCookie(cookies);
+  }
+
   return response;
 };
 

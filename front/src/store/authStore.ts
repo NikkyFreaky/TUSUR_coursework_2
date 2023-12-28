@@ -5,10 +5,8 @@ export const updateName = createEvent<string>();
 export const updateSurname = createEvent<string>();
 export const updateLogin = createEvent<string>();
 export const updateEmail = createEvent<string>();
-
-// Создаем события для аутентификации
-export const loginEvent = createEvent();
-export const logoutEvent = createEvent();
+export const updateIsAuth = createEvent<boolean>();
+export const updateCookie = createEvent<string[]>();
 
 // Создаем сторы для каждого поля
 export const nameStore = createStore<string>('').on(
@@ -31,10 +29,15 @@ export const emailStore = createStore<string>('').on(
   (_, value) => value,
 );
 
-// Создаем стор для isAuth
-export const isAuthenticatedStore = createStore<boolean>(false)
-  .on(loginEvent, () => true)
-  .reset(logoutEvent);
+export const isAuthenticatedStore = createStore<boolean>(false).on(
+  updateIsAuth,
+  (_, value) => value,
+);
+
+export const cookieStore = createStore<string[]>([]).on(
+  updateCookie,
+  (_, value) => value,
+);
 
 // Комбинируем все сторы в один объект
 export const userStore = combine({
@@ -43,4 +46,22 @@ export const userStore = combine({
   login: loginStore,
   email: emailStore,
   isAuth: isAuthenticatedStore,
+  cookie: cookieStore,
 });
+
+// Подписываемся на обновления и сохраняем в Local Storage
+userStore.watch((state) => {
+  localStorage.setItem('userData', JSON.stringify(state));
+});
+
+// Загружаем данные из Local Storage при инициализации
+const storedData = localStorage.getItem('userData');
+if (storedData) {
+  const parsedData = JSON.parse(storedData);
+  updateName(parsedData.name);
+  updateSurname(parsedData.surname);
+  updateLogin(parsedData.login);
+  updateEmail(parsedData.email);
+  updateIsAuth(parsedData.isAuth);
+  updateCookie(parsedData.cookie);
+}

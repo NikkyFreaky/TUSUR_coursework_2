@@ -11,7 +11,7 @@ import {
   updateSurname,
   updateLogin,
   updateEmail,
-  loginEvent,
+  updateIsAuth,
 } from './../../store/authStore';
 
 interface IAuthModalProps {
@@ -36,7 +36,7 @@ const AuthModal: FC<IAuthModalProps> = ({
           // ВОТ ЭТО НАДО ПРОВЕРИТЬ
           // вроде как при входе на сервер отправляется запрос на получение данных о юзере
           // закидываем эти данные в стор
-          loginEvent();
+          localStorage.setItem('isAuth', JSON.stringify(true));
           getAccountData().then((res) => console.log(res));
           // getAccountData().then((res) => {
           //   updateName(first_name);
