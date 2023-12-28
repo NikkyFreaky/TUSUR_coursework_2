@@ -1,3 +1,4 @@
+from django.contrib.sessions.models import Session
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
@@ -96,10 +97,21 @@ def register(request):
                 UserProfile.objects.create(user=user, system=system)
 
                 auth_login(request, user)
-
+                request.session.create()
+                django_session = Session.objects.get(session_key=request.session.session_key)
                 # Пример успешного ответа
-                response_data = {'status': 'success', 'message': 'Registration successful'}
-                return JsonResponse(response_data)
+                response_data = {
+                    'status': 'success',
+                    'message': 'Registration successful',
+                    'session_id': django_session.session_key,
+                    'session_expire_at': django_session.expire_date.timestamp(),
+                }
+                response = JsonResponse(response_data)
+
+                # Устанавливаем куки сессии в ответе
+                response.set_cookie('sessionid', django_session.session_key, expires=django_session.expire_date)
+
+                return response
             else:
                 # Пример ответа с ошибками формы
                 print(form.errors)
