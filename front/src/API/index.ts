@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { API_URL } from '../utils/consts';
+import Cookies from 'js-cookie';
 
 // Запрос новостей по параметру категории/дате/стране
 export const getNews = async (parameter: string) => {
@@ -52,8 +53,33 @@ export const logOutAccount = async () => {
 
 // запрос о войденности юзера в аккаунт на бэке
 export const isUserEntered = async () => {
-  const response = await axios.get(`${API_URL}/check_online/`);
-  return response;
+  try {
+    // Сделайте запрос на check_session с куками
+    const response = await axios.get(`${API_URL}/check_session/`, {
+      headers: {
+        'Cookie': `sessionid=${Cookies.get('sessionid')}`,
+      },
+    });
+
+    if (response.data.status === 'success') {
+      return {
+        status: 'success',
+        message: 'User is authenticated',
+        user: response.data.user,
+      };
+    } else {
+      return {
+        status: 'error',
+        message: 'User is not authenticated',
+      };
+    }
+  } catch (error) {
+    console.error('Error checking session:', error);
+    return {
+      status: 'error',
+      message: 'An error occurred while checking session',
+    };
+  }
 };
 
 // запрос данных о пользователе
