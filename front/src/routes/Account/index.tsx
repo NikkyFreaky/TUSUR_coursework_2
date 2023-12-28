@@ -3,6 +3,7 @@ import avatar from './../../assets/avatar.jpg';
 import { HeaderButton } from '../../components/UI/HeaderButton';
 
 import { useNavigate } from 'react-router-dom';
+import { logOutAccount } from '../../API';
 
 // импорты для стора
 import { useStoreMap } from 'effector-react';
@@ -55,6 +56,7 @@ export const Account = () => {
             <button
               onClick={() => {
                 logoutEvent();
+                logOutAccount();
                 navigate('/news/');
               }}
             >
