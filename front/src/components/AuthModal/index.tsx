@@ -22,51 +22,72 @@ const AuthModal: FC<IAuthModalProps> = ({
   const [auth, setAuth] = useState<boolean>(false);
 
   const handleLogin = () => {
-    logInAccount(login, password).then((responce) =>
-      console.log(responce.data),
-    );
+    logInAccount(login, password)
+      .then((responce) => {
+        console.log(responce.data);
+        // успешный вход
+        if (responce.data.status === 'success') {
+          setAuth(true);
+          console.log(
+            'Login successfull with message: ',
+            responce.data.message,
+          );
+          setShowNotification(true);
+          setNotificationText('Успешный вход');
+          setTimeout(() => {
+            setShowNotification(false);
+            onClose(); // Закрытие модального окна после уведомления
+          }, 3000);
+        }
+        // Пустое поле/поля
+        else if (responce.data.message === 'This field is required.') {
+          console.log('Login failed with message: ', responce.data.message);
+          setShowNotification(true);
+          setNotificationText('Все поля обязательны к заполнению');
+          setTimeout(() => {
+            setShowNotification(false);
+          }, 3000);
+        }
+        // Юзер в бане
+        else if (responce.data.message === 'User is banned') {
+          console.log('Login failed with message: ', responce.data.message);
+          setShowNotification(true);
+          setNotificationText('Пользователь в черном списке');
+          setTimeout(() => {
+            setShowNotification(false);
+          }, 3000);
+        }
+        // Неверный логин/пароль
+        else if (
+          responce.data.message ===
+          'Please enter a correct username and password'
+        ) {
+          console.log('Login failed with message: ', responce.data.message);
+          setShowNotification(true);
+          setNotificationText('Введен неверный логин или пароль');
+          setTimeout(() => {
+            setShowNotification(false);
+          }, 3000);
+        }
+        // обработка на всякий случай. Не знаю, как на неё выйти
+        else {
+          console.log('Login failed, i dont know what happened');
+          setShowNotification(true);
+          setNotificationText('Некорректные данные регистрации');
+          setTimeout(() => {
+            setShowNotification(false);
+          }, 3000);
+        }
+      })
+      .catch((error) => {
+        console.log('Login failed with error: ', error);
+        setShowNotification(true);
+        setNotificationText('Неверные данные входа');
+        setTimeout(() => {
+          setShowNotification(false);
+        }, 3000);
+      });
   };
-
-  // const handleLogin = () => {
-  //   logInAccount(login, password)
-  //     .then((responce) => {
-  //       console.log(responce.data);
-  //       if (
-  //         responce.data.__all__.includes(
-  //           'Please enter a correct username and password. Note that both fields may be case-sensitive.',
-  //         )
-  //       ) {
-  //         setAuth(false);
-  //         console.log(
-  //           'Auth failed with error ',
-  //           'Please enter a correct username and password. Note that both fields may be case-sensitive.',
-  //         );
-  //         setShowNotification(true);
-  //         setNotificationText('Неправильные логин или пароль');
-  //         setTimeout(() => {
-  //           setShowNotification(false);
-  //         }, 3000);
-  //       }
-  //       else if (responce.status === 200) {
-  //         setAuth(true);
-  //         console.log('Auth successfull with status', responce);
-  //         setShowNotification(true);
-  //         setNotificationText('Успешный вход');
-  //         setTimeout(() => {
-  //           setShowNotification(false);
-  //           onClose(); // Закрытие модального окна после уведомления
-  //         }, 3000);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.log('Auth failed with error: ', error);
-  //       setShowNotification(true);
-  //       setNotificationText('Неверные данные входа');
-  //       setTimeout(() => {
-  //         setShowNotification(false);
-  //       }, 3000);
-  //     });
-  // };
 
   // всплывающее уведомление
   const [showNotification, setShowNotification] = useState(false);
