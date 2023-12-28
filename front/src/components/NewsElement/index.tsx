@@ -30,6 +30,7 @@ export const NewsElement: React.FC<props> = ({ article }) => {
           {article.title}
         </div>
         <div className="main-info__desc">{article.description}</div>
+        <div>{article.event_date}</div>
       </div>
     </div>
   );
