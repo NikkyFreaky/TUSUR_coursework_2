@@ -162,7 +162,8 @@ def login(request):
                         response = JsonResponse(response_data)
 
                         # Устанавливаем куки сессии в ответе
-                        response.set_cookie('sessionid', django_session.session_key, expires=django_session.expire_date, secure=False, httponly=False)
+                        response.set_cookie('sessionid', django_session.session_key, expires=django_session.expire_date,
+                                            secure=False, httponly=False)
 
                         return response
 
@@ -173,8 +174,8 @@ def login(request):
 
                 if 'This field is required.' in str(form.errors):
                     return JsonResponse({'status': 'error', 'message': 'This field is required.'})
-                elif "Please enter a correct username and password. Note that both fields may be case-sensitive." in str(
-                        form.errors):
+                elif "Please enter a correct username and password. Note that both fields may be case-sensitive." in \
+                        str(form.errors):
                     return JsonResponse({'status': 'error', 'message': 'Please enter a correct username and password'})
                 else:
                     return JsonResponse({'status': 'error', 'message': 'Unknow error'})
@@ -231,7 +232,7 @@ def get_user_data(request):
 
             # Извлекаем sessionid из данных запроса
             session_id_from_request = data.get('sessionid')
-
+            print(data)
             # Получаем объект сессии по переданному sessionid
             session = Session.objects.get(session_key=session_id_from_request)
 
@@ -239,21 +240,17 @@ def get_user_data(request):
             user_id = session.get_decoded().get('_auth_user_id')
             user = User.objects.get(pk=user_id)
 
-            # Формируем данные о пользователе
-            user_data = {
-                'first_name': user.first_name,
-                'last_name': user.last_name,
-                'username': user.username,
-                'email': user.email,
-            }
+            return JsonResponse({'status': 'success', 'name': user.first_name, 'surname': user.last_name,
+                                 'login': user.username,
+                                 'email': user.email})
 
-            return JsonResponse({'status': 'success', 'user_data': user_data})
         except Session.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'Session does not exist'}, status=404)
+            return JsonResponse({'status': 'error', 'message': 'Session does not exist'}, status=300)
         except Exception as e:
             # Обработка других ошибок
             print('Error during user data retrieval:', str(e))
-            return JsonResponse({'status': 'error', 'message': 'An error occurred during user data retrieval'}, status=500)
+            return JsonResponse({'status': 'error', 'message': 'An error occurred during user data retrieval'},
+                                status=500)
     else:
         # Обработка неверного метода запроса
         response_data = {'status': 'error', 'message': 'Invalid request method'}

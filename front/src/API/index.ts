@@ -88,8 +88,8 @@ export const logOutAccount = async () => {
 
 // запрос данных о пользователе
 export const getAccountData = async () => {
-  const headers = { sessionid: localStorage.getItem('cookie') };
-  const response = await axios.get(`${API_URL}/get_user_data/`, { headers });
+  const sessionid = localStorage.getItem('cookie') ;
+  const response = await axios.post(`${API_URL}/get_user_data/`, { sessionid });
   return response;
 };
 
