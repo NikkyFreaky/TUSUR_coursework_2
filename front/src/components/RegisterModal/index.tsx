@@ -11,13 +11,11 @@ import {
   updateSurname,
   updateLogin,
   updateEmail,
-  loginEvent,
 } from './../../store/authStore';
 
 interface IRegisterModalProps {
   isOpen: boolean;
   onClose: () => void;
-  // loginEvent: EventCallable<void>;
 }
 
 const RegisterModal: FC<IRegisterModalProps> = ({ isOpen, onClose }) => {
@@ -33,12 +31,11 @@ const RegisterModal: FC<IRegisterModalProps> = ({ isOpen, onClose }) => {
       .then((responce) => {
         // успешная регистрация
         if (responce.data.status === 'success') {
-
           updateName(first_name);
           updateSurname(last_name);
           updateLogin(login);
           updateEmail(email);
-          loginEvent();
+          localStorage.setItem('isAuth', JSON.stringify(true));
 
           setShowNotification(true);
           setNotificationText('Успешная регистрация');

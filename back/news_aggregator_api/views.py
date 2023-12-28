@@ -145,7 +145,7 @@ def login(request):
                 user = authenticate(request, username=username, password=password)
                 if user is not None:
                     auth_login(request, user)
-                    if request.user.is_authenticated and not user_profile.is_online:
+                    if request.user.is_authenticated:
                         user_profile.is_online = True
                         user_profile.save()
                         return JsonResponse({'status': 'success', 'message': 'Login successful'})

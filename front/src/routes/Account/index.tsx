@@ -3,10 +3,11 @@ import avatar from './../../assets/avatar.jpg';
 import { HeaderButton } from '../../components/UI/HeaderButton';
 
 import { useNavigate } from 'react-router-dom';
+import { logOutAccount } from '../../API';
 
 // импорты для стора
 import { useStoreMap } from 'effector-react';
-import { userStore, logoutEvent } from './../../store/authStore';
+import { userStore } from './../../store/authStore';
 
 export const Account = () => {
   const navigate = useNavigate();
@@ -54,7 +55,8 @@ export const Account = () => {
             </div>
             <button
               onClick={() => {
-                logoutEvent();
+                localStorage.setItem('isAuth', JSON.stringify(false));
+                logOutAccount();
                 navigate('/news/');
               }}
             >

@@ -11,7 +11,7 @@ import {
   updateSurname,
   updateLogin,
   updateEmail,
-  loginEvent,
+  updateIsAuth,
 } from './../../store/authStore';
 
 interface IAuthModalProps {
@@ -36,8 +36,8 @@ const AuthModal: FC<IAuthModalProps> = ({
           // ВОТ ЭТО НАДО ПРОВЕРИТЬ
           // вроде как при входе на сервер отправляется запрос на получение данных о юзере
           // закидываем эти данные в стор
-          loginEvent();
-          getAccountData().then((res) => console.log(res));
+          localStorage.setItem('isAuth', JSON.stringify(true));
+          //getAccountData().then((res) => console.log(res));
           // getAccountData().then((res) => {
           //   updateName(first_name);
           // updateSurname(last_name);
@@ -88,6 +88,7 @@ const AuthModal: FC<IAuthModalProps> = ({
         }
       })
       .catch((error) => {
+        console.log('AUTH MODAL CAUGHT ERROR', error);
         setShowNotification(true);
         setNotificationText('Неверные данные входа');
         setTimeout(() => {
