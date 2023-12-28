@@ -37,7 +37,7 @@ const AuthModal: FC<IAuthModalProps> = ({
           // вроде как при входе на сервер отправляется запрос на получение данных о юзере
           // закидываем эти данные в стор
           loginEvent();
-          //getAccountData().then((res) => console.log(res));
+          getAccountData().then((res) => console.log(res));
           // getAccountData().then((res) => {
           //   updateName(first_name);
           // updateSurname(last_name);
@@ -80,9 +80,8 @@ const AuthModal: FC<IAuthModalProps> = ({
         }
         // обработка на всякий случай. Не знаю, как на неё выйти
         else {
-          console.log(responce.data);
           setShowNotification(true);
-          setNotificationText('Некорректные данные входа');
+          setNotificationText('Некорректные данные регистрации');
           setTimeout(() => {
             setShowNotification(false);
           }, 3000);

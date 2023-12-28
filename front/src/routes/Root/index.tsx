@@ -1,8 +1,7 @@
-import React, { useState, KeyboardEvent, useEffect } from 'react';
+import React, { useState, KeyboardEvent } from 'react';
 import './header.css';
 import { Outlet, useNavigate } from 'react-router-dom';
 
-import { isUserEntered } from '../../API';
 import avatar from '../../assets/avatar.jpg';
 import { ReactComponent as Logo } from '../../assets/search_icon.svg';
 import { HeaderButton } from '../../components/UI/HeaderButton';
@@ -20,8 +19,7 @@ import RegisterModal from '../../components/RegisterModal';
 
 // импорты стора
 import { useStoreMap } from 'effector-react';
-import { userStore, loginEvent, logoutEvent } from './../../store/authStore';
-import { error } from 'console';
+import { userStore, loginEvent, logoutEvent} from './../../store/authStore';
 
 export const Root = () => {
   const navigate = useNavigate();
@@ -63,12 +61,6 @@ export const Root = () => {
     keys: ['isAuth'],
     fn: (state) => state.isAuth,
   });
-
-  useEffect(() => {
-    isUserEntered()
-      .then((result) => console.log('User data:', result))
-      .catch((error) => console.log('Error fetching user data:', error));
-  }, []);
 
   return (
     <div className="mainPage">

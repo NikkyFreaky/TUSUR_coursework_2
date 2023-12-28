@@ -1,4 +1,3 @@
-from django.contrib.sessions.models import Session
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 
@@ -98,23 +97,9 @@ def register(request):
 
                 auth_login(request, user)
 
-                request.session.create()
-                django_session = Session.objects.get(session_key=request.session.session_key)
-
-                # Пример успешного ответа с куками сессии
-                response_data = {
-                    'status': 'success',
-                    'message': 'Registration successful',
-                    'session_id': django_session.session_key,
-                    'session_expire_at': django_session.expire_date.timestamp(),
-                }
-                response = JsonResponse(response_data)
-
-                # Устанавливаем куки сессии в ответе
-                response.set_cookie('sessionid', django_session.session_key, expires=django_session.expire_date)
-
-                return response
-
+                # Пример успешного ответа
+                response_data = {'status': 'success', 'message': 'Registration successful'}
+                return JsonResponse(response_data)
             else:
                 # Пример ответа с ошибками формы
                 print(form.errors)
@@ -333,23 +318,20 @@ def get_user_categories(request):
 
 
 @csrf_exempt
-def check_session(request):
-    print(request.COOKIES)
+def check_online(request):
+    try:
+        # Получаем текущего пользователя
+        user_profile, created = UserProfile.objects.get_or_create(user=request.user)
 
-    if request.user.is_authenticated:
-        # Пользователь аутентифицирован, возвращаем информацию о пользователе
-        return JsonResponse({
-            'status': 'success',
-            'message': 'User is authenticated',
-            'user': {
-                'id': request.user.id,
-                'username': request.user.username,
-                # Другие необходимые данные о пользователе
-            }
-        })
-    else:
-        # Пользователь не аутентифицирован
-        return JsonResponse({
-            'status': 'error',
-            'message': 'User is not authenticated'
-        })
+        # Проверяем статус "онлайн"
+        is_online = getattr(user_profile, 'is_online', False)
+
+        # Возвращаем ответ с текущим статусом "онлайн"
+        response_data = {'status': 'success', 'is_online': is_online}
+        return JsonResponse(response_data)
+
+    except Exception as e:
+        # Обработка ошибок
+        print('Error during online check:', str(e))
+        response_data = {'status': 'error', 'message': 'An error occurred during online check'}
+        return JsonResponse(response_data, status=500)

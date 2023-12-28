@@ -13,7 +13,6 @@
     "axios": "^1.4.0",
     "effector": "^23.1.0",
     "effector-react": "^23.1.0",
-    "js-cookie": "^3.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.1",
@@ -46,7 +45,6 @@
     ]
   },
   "devDependencies": {
-    "@types/js-cookie": "^3.0.6",
     "prettier": "^2.8.8"
   }
 }
