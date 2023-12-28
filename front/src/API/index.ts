@@ -104,6 +104,14 @@ export const getAccountData = async () => {
   return response;
 };
 
+// поиск по ключевым словам
+// http://127.0.0.1:8000/api/news/search/
+export const getSearchResult = async (keyword: string) => {
+  const headers = { q: keyword };
+  const response = await axios.get(`${API_URL}/news/search/`, { headers });
+  return response;
+};
+
 // Вспомогательная функция проверки параметра при запросе новостей
 const parametercheck = (parameter: string) => {
   const countryList = [

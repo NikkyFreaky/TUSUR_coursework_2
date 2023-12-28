@@ -16,6 +16,8 @@ import {
 import Modal from '../../components/Modal';
 import AuthModal from '../../components/AuthModal';
 import RegisterModal from '../../components/RegisterModal';
+import { getSearchResult } from '../../API';
+import { error } from 'console';
 
 // импорты стора
 
@@ -44,6 +46,7 @@ export const Root = () => {
   const [searchValue, setSearchValue] = useState('');
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
+      console.log('ROOT handleKeyDown Enter pressed');
       // Вызовите вашу функцию по нажатию Enter
       handleSearch();
     }
@@ -51,14 +54,19 @@ export const Root = () => {
   const handleSearch = () => {
     // Ваша функция по обработке поиска
     console.log('Выполняется поиск с запросом:', searchValue);
+    getSearchResult(searchValue)
+      .then((res) => {
+        console.log('ROOT handleSearch searchValue: ', searchValue);
+        navigate('/news/' + searchValue);
+      })
+      .catch((error) => {
+        console.log('ROOT handleSearch error: ', error);
+      });
   };
 
   //стор
   const storedIsAuth = localStorage.getItem('isAuth');
   const initialIsAuth = storedIsAuth ? JSON.parse(storedIsAuth) : false;
-
-  // console.log('stored', storedIsAuth);
-  // console.log('initial', initialIsAuth);
 
   return (
     <div className="mainPage">
