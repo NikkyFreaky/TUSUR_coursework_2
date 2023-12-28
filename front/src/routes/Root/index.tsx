@@ -17,9 +17,6 @@ import Modal from '../../components/Modal';
 import AuthModal from '../../components/AuthModal';
 import RegisterModal from '../../components/RegisterModal';
 
-// импорты стора
-import { useStoreMap } from 'effector-react';
-import { userStore, loginEvent, logoutEvent} from './../../store/authStore';
 
 export const Root = () => {
   const navigate = useNavigate();
@@ -46,21 +43,29 @@ export const Root = () => {
   const [searchValue, setSearchValue] = useState('');
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
+      console.log('ROOT handleKeyDown Enter pressed');
       // Вызовите вашу функцию по нажатию Enter
       handleSearch();
     }
   };
   const handleSearch = () => {
     // Ваша функция по обработке поиска
-    console.log('Выполняется поиск с запросом:', searchValue);
+    console.log('ROOT handleSearch searchValue: ', searchValue);
+    navigate('/news/search/' + searchValue);
+    //window.location.reload();
+    // getSearchResult(searchValue)
+    //   .then((res) => {
+    //     console.log('ROOT handleSearch searchValue: ', searchValue);
+    //     navigate('/news/search/' + searchValue);
+    //   })
+    //   .catch((error) => {
+    //     console.log('ROOT handleSearch error: ', error);
+    //   });
   };
 
   //стор
-  const isAuth = useStoreMap({
-    store: userStore,
-    keys: ['isAuth'],
-    fn: (state) => state.isAuth,
-  });
+  const storedIsAuth = localStorage.getItem('isAuth');
+  const initialIsAuth = storedIsAuth ? JSON.parse(storedIsAuth) : false;
 
   return (
     <div className="mainPage">
@@ -81,7 +86,7 @@ export const Root = () => {
                 onKeyDown={handleKeyDown}
               />
             </div>
-            {isAuth !== true ? (
+            {initialIsAuth !== true ? (
               <button onClick={openLoginModal}>Вход</button>
             ) : (
               <img
@@ -100,7 +105,7 @@ export const Root = () => {
               items={dropdownItemsCategory}
             />
             <HeaderDropdown value="По дате" items={dropdownItemsTime} />
-            {isAuth === true ? (
+            {initialIsAuth === true ? (
               <HeaderDropdown
                 value="Пользовательские"
                 items={dropdownItemsTime}

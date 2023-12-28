@@ -3,37 +3,20 @@ import avatar from './../../assets/avatar.jpg';
 import { HeaderButton } from '../../components/UI/HeaderButton';
 
 import { useNavigate } from 'react-router-dom';
+import { logOutAccount } from '../../API';
 
 // импорты для стора
 import { useStoreMap } from 'effector-react';
-import { userStore, logoutEvent } from './../../store/authStore';
+import { userStore } from './../../store/authStore';
 
 export const Account = () => {
   const navigate = useNavigate();
 
-  const name = useStoreMap({
-    store: userStore,
-    keys: ['name'],
-    fn: (state) => state.name,
-  });
 
-  const surname = useStoreMap({
-    store: userStore,
-    keys: ['surname'],
-    fn: (state) => state.surname,
-  });
-
-  const email = useStoreMap({
-    store: userStore,
-    keys: ['email'],
-    fn: (state) => state.email,
-  });
-
-  const login = useStoreMap({
-    store: userStore,
-    keys: ['login'],
-    fn: (state) => state.login,
-  });
+const name = localStorage.getItem('name');
+const surname = localStorage.getItem('surname');
+const login = localStorage.getItem('login');
+const email = localStorage.getItem('email');
 
   return (
     <div className="account">
@@ -54,7 +37,8 @@ export const Account = () => {
             </div>
             <button
               onClick={() => {
-                logoutEvent();
+                localStorage.setItem('isAuth', JSON.stringify(false));
+                logOutAccount();
                 navigate('/news/');
               }}
             >
