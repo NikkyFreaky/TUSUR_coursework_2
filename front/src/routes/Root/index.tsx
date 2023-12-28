@@ -17,7 +17,6 @@ import Modal from '../../components/Modal';
 import AuthModal from '../../components/AuthModal';
 import RegisterModal from '../../components/RegisterModal';
 
-
 export const Root = () => {
   const navigate = useNavigate();
 
@@ -51,16 +50,8 @@ export const Root = () => {
   const handleSearch = () => {
     // Ваша функция по обработке поиска
     console.log('ROOT handleSearch searchValue: ', searchValue);
-    navigate('/news/search/' + searchValue);
-    //window.location.reload();
-    // getSearchResult(searchValue)
-    //   .then((res) => {
-    //     console.log('ROOT handleSearch searchValue: ', searchValue);
-    //     navigate('/news/search/' + searchValue);
-    //   })
-    //   .catch((error) => {
-    //     console.log('ROOT handleSearch error: ', error);
-    //   });
+    navigate('/news/search/?q=' + searchValue);
+    localStorage.setItem('keyword', searchValue);
   };
 
   //стор

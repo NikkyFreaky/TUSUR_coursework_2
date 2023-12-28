@@ -47,6 +47,7 @@ export const userStore = combine({
   email: emailStore,
   isAuth: isAuthenticatedStore,
   cookie: cookieStore,
+  // keyword: keywordStore,
 });
 
 // Подписываемся на обновления и сохраняем в Local Storage

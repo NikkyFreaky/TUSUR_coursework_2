@@ -14,6 +14,7 @@ export const News = () => {
 
   const location = useLocation();
   const urlParams = location.pathname.replace('/news/', ''); // Получаем все параметры после '/news/'
+  //console.log('NEWS pathname: ', location.pathname);
   console.log('NEWS urlparams: ', urlParams);
 
   useEffect(() => {

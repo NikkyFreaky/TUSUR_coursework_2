@@ -13,10 +13,14 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/news/',
-        element: <News />
+        element: <News />,
       },
       {
         path: '/news/:parameters/:parameters',
+        element: <News />,
+      },
+      {
+        path: '/news/search/',
         element: <News />,
       },
       {
