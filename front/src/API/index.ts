@@ -24,24 +24,14 @@ export const logInAccount = async (username: string, password: string) => {
       username: username,
       password: password,
     },
-    {
-      headers: {
-        'Set-Cookie': '1',
-      },
-    },
+
   );
   //Set-Cookie
+    console.log('pizdec: ', response.data.sessionid);
+    localStorage.setItem('cookie', response.data.sessionid);
 
-  const headers = response.headers;
-  console.log('API login responce ', headers);
-  console.log('API login headers', headers);
 
-  // if (response.headers) {
-  //   const sessionid = response.headers;
-  //   console.log('API login SESSIONID ', sessionid);
-  //   localStorage.setItem('cookie', JSON.stringify(sessionid));
-  // }
-  // console.log('API login LOCALSTORAGE ', localStorage.getItem('cookie'));
+
 
   return response;
 };
@@ -83,24 +73,15 @@ export const registerInAccount = async (
 // запрос на выход
 export const logOutAccount = async () => {
   // Получаем куки из localStorage
-  const headers = {
-    'Content-Type': 'application/json',
-    Cookie: localStorage.getItem('cookie'), // Убедитесь, что у вас есть куки для установки
-  };
-  console.log(headers);
-
-  const response = await axios.post(
-    `${API_URL}/logout/`,
-    {},
-    { headers, withCredentials: true },
-  );
+    const response = await axios.post(`${API_URL}/logout/`, {sessionid: localStorage.getItem('cookie')});
 
   return response;
 };
 
 // запрос данных о пользователе
 export const getAccountData = async () => {
-  const response = await axios.get(`${API_URL}/get_user_data/`);
+  const headers = {sessionid: localStorage.getItem('cookie')};
+  const response = await axios.get(`${API_URL}/get_user_data/`, {headers});
   return response;
 };
 
