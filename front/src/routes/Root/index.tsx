@@ -18,8 +18,6 @@ import AuthModal from '../../components/AuthModal';
 import RegisterModal from '../../components/RegisterModal';
 
 // импорты стора
-import { useStoreMap } from 'effector-react';
-import { userStore } from './../../store/authStore';
 
 export const Root = () => {
   const navigate = useNavigate();

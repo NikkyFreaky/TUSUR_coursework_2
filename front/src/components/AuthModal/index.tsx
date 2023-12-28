@@ -37,7 +37,7 @@ const AuthModal: FC<IAuthModalProps> = ({
           // вроде как при входе на сервер отправляется запрос на получение данных о юзере
           // закидываем эти данные в стор
           localStorage.setItem('isAuth', JSON.stringify(true));
-          getAccountData().then((res) => console.log(res));
+          //getAccountData().then((res) => console.log(res));
           // getAccountData().then((res) => {
           //   updateName(first_name);
           // updateSurname(last_name);
@@ -88,6 +88,7 @@ const AuthModal: FC<IAuthModalProps> = ({
         }
       })
       .catch((error) => {
+        console.log('AUTH MODAL CAUGHT ERROR', error);
         setShowNotification(true);
         setNotificationText('Неверные данные входа');
         setTimeout(() => {

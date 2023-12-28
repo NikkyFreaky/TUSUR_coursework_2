@@ -18,15 +18,30 @@ export const getAllNews = async () => {
 
 // Запрос входа в аккаунт
 export const logInAccount = async (username: string, password: string) => {
-  const response = await axios.post(`${API_URL}/login/`, {
-    username: username,
-    password: password,
-  });
+  const response = await axios.post(
+    `${API_URL}/login/`,
+    {
+      username: username,
+      password: password,
+    },
+    {
+      headers: {
+        'Set-Cookie': '1',
+      },
+    },
+  );
+  //Set-Cookie
 
-  const cookies = response.headers['set-cookie'];
-  if (cookies) {
-    updateCookie(cookies);
-  }
+  const headers = response.headers;
+  console.log('API login responce ', headers);
+  console.log('API login headers', headers);
+
+  // if (response.headers) {
+  //   const sessionid = response.headers;
+  //   console.log('API login SESSIONID ', sessionid);
+  //   localStorage.setItem('cookie', JSON.stringify(sessionid));
+  // }
+  // console.log('API login LOCALSTORAGE ', localStorage.getItem('cookie'));
 
   return response;
 };
@@ -49,17 +64,37 @@ export const registerInAccount = async (
     password2: password2,
   });
 
-  const cookies = response.headers['set-cookie'];
-  if (cookies) {
-    updateCookie(cookies);
+  const cookie = response.headers['set-cookie'];
+  if (cookie) {
+    console.log('API register request', cookie);
+    localStorage.setItem('cookie', JSON.stringify(cookie));
   }
 
   return response;
 };
 
+// // запрос на выход
+// export const logOutAccount = async () => {
+//   const response = await axios.post(`${API_URL}/logout/`);
+
+//   return response;
+// };
+
 // запрос на выход
 export const logOutAccount = async () => {
-  const response = await axios.post(`${API_URL}/logout/`);
+  // Получаем куки из localStorage
+  const headers = {
+    'Content-Type': 'application/json',
+    Cookie: localStorage.getItem('cookie'), // Убедитесь, что у вас есть куки для установки
+  };
+  console.log(headers);
+
+  const response = await axios.post(
+    `${API_URL}/logout/`,
+    {},
+    { headers, withCredentials: true },
+  );
+
   return response;
 };
 
