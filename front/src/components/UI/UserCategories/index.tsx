@@ -6,6 +6,7 @@ import {
   deleteUserCategory,
   getUserCategories,
 } from '../../../API';
+import CategoryModal from '../../CategoryModal';
 
 export interface IUserCategories {}
 
@@ -68,12 +69,12 @@ export const UserCategories: React.FC<IUserCategories> = ({}) => {
   }, []);
 
   //добавление пользовательской категории
-  const addUserCategory = () => {
-    // вызов модалки с запросом на название категории
-    const newCategoryName = 'Bunnies';
-    createUserCategory(newCategoryName);
-    window.location.reload();
-  };
+  //   const addUserCategory = () => {
+  //     openModal();
+  //     const newCategoryName = 'Bunnies';
+  //     createUserCategory(newCategoryName);
+  //     window.location.reload();
+  //   };
 
   // удаление пользовательской категории
   const handleCategoryDelete = (categoryName: string) => {
@@ -83,7 +84,17 @@ export const UserCategories: React.FC<IUserCategories> = ({}) => {
     window.location.reload();
   };
 
-  //добавление новости в юзерлист
+  //модалка
+  const [isModalOpen, setModalOpen] = useState(false);
+  //const [selectedCategory, setSelectedCategory] = useState('');
+
+  const openModal = () => {
+    setModalOpen(true);
+  };
+  const handleAddCategory = (newCategoryName: string) => {
+    createUserCategory(newCategoryName);
+    window.location.reload();
+  };
 
   return (
     <div className={`headerButtonContainer ${isDropdownOpen ? 'open' : ''}`}>
@@ -94,7 +105,13 @@ export const UserCategories: React.FC<IUserCategories> = ({}) => {
       {isDropdownOpen && (
         <div className="dropdownContent">
           <div className="dropdownItemsWrapper">
-            <a href="#" onClick={() => addUserCategory()}>
+            <a
+              href="#"
+              onClick={() => {
+                setDropdownOpen(false);
+                openModal();
+              }}
+            >
               Новая
             </a>
             {items.map((item, index) => (
@@ -113,6 +130,11 @@ export const UserCategories: React.FC<IUserCategories> = ({}) => {
           </div>
         </div>
       )}
+      <CategoryModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        onSubmit={handleAddCategory}
+      />
     </div>
   );
 };
