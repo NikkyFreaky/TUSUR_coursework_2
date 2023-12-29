@@ -4,25 +4,32 @@ import { updateCookie } from '../store/authStore';
 
 // Запрос новостей по параметру категории/дате/стране
 export const getNews = async (parameter: string) => {
-  const checkForSearch = parameter.split('/')[0];
+  const checkForSearch = parameter.split('/')[1];
   console.log('API getNews parse parameter: ', parameter);
+  console.log('API getNews checkForSearch: ', checkForSearch);
+  // поиск новости по ключевому слову
   if (checkForSearch === 'search') {
     // http://127.0.0.1:8000/api/news/search/
-    //const keyword = parameter.split('/')[1];
-    // console.log('API getNews keyword: ', keyword);
-
-    //const headers = { q: keyword };
-    // const responce = await axios.get(`${API_URL}/news/${parameter}`);
-    //const responce = await axios.get(`${API_URL}/news/search/`, { headers });
-
     const searchValue = localStorage.getItem('keyword');
-
     const response = await axios.post(`${API_URL}/news/search/`, {
       searchValue,
     });
-
     return response;
-  } else {
+  }
+  // достаем новости с юзер категории
+  else if (checkForSearch === 'news_user_category') {
+    const sessionid = localStorage.getItem('cookie');
+    const userCategoryName = parameter.split('/')[2];
+    //console.log('param', userCategoryName);
+    const response = await axios.post(`${API_URL}/news_user_category/`, {
+      sessionid,
+      userCategoryName,
+    });
+    console.log('getUserCategoryNews', response);
+    return response;
+  }
+  // печать новости по региону и парсинг
+  else {
     axios.get(`${API_URL}/parse/${parametercheck(parameter)}`);
     const response = await axios.get(`${API_URL}/news/${parameter}`);
     return response;
@@ -95,6 +102,17 @@ export const getUserCategories = async () => {
   const response = await axios.post(`${API_URL}/get_user_category/`, {
     sessionid,
   });
+  return response;
+};
+
+// запрос на получение списка новостей из пользовательской категории
+export const getUserCategoryNews = async (userCategoryName: string) => {
+  const sessionid = localStorage.getItem('cookie');
+  const response = await axios.post(`${API_URL}/news_user_category/`, {
+    sessionid,
+    userCategoryName,
+  });
+  console.log('getUserCategoryNews', response);
   return response;
 };
 
