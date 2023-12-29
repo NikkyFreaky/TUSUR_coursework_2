@@ -52,6 +52,7 @@ export const Root = () => {
     console.log('ROOT handleSearch searchValue: ', searchValue);
     navigate('/news/search/?q=' + searchValue);
     localStorage.setItem('keyword', searchValue);
+    window.location.reload();
   };
 
   //стор
