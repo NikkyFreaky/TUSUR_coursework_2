@@ -15,7 +15,15 @@ export const UserCategories: React.FC<IUserCategories> = ({}) => {
     getUserCategories()
       .then((res) => {
         console.log('USERCATEGORIES getUserCategories res.data: ', res.data);
-        setItems(res.data.categories);
+        const categories = res.data.name;
+        const dropdownItems: IHeaderDropdownItem[] = categories.map(
+          (category: string) => ({
+            href: `/news_user_category/${category}`, // замените на реальный путь
+            text: category,
+          }),
+        );
+        setItems(dropdownItems);
+        console.log(items);
       })
       .catch((e) => console.log('USERCATEGORIES getUserCategories error: ', e));
     // Закрываем все выпадающие списки перед открытием текущего

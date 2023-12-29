@@ -27,6 +27,10 @@ const router = createBrowserRouter([
         path: '/account/',
         element: <Account />,
       },
+      {
+        path: '/news_user_category/:parameters',
+        element: <News />,
+      },
     ],
   },
 ]);
