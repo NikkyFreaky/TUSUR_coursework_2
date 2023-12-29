@@ -269,16 +269,23 @@ def create_user_category(request):
         try:
             # Получаем данные из тела запроса
             data = json.loads(request.body.decode('utf-8'))
+            session_id_from_request = data.get('sessionid')
 
+            # Получаем объект сессии по переданному sessionid
+            session = Session.objects.get(session_key=session_id_from_request)
+
+            # Получаем пользователя из сессии
+            user_id = session.get_decoded().get('_auth_user_id')
+            user = User.objects.get(pk=user_id)
             # Извлекаем значения из данных
             category_name = data.get('category_name')
 
             # Проверяем, существует ли категория с таким именем для данного пользователя
-            existing_category = UserCategory.objects.filter(user=request.user, category_name=category_name).first()
+            existing_category = UserCategory.objects.filter(user=user, category_name=category_name).first()
 
             if existing_category is None:
                 # Если категории не существует, создаем новую
-                new_category = UserCategory(user=request.user, category_name=category_name)
+                new_category = UserCategory(user=user, category_name=category_name)
                 new_category.save()
 
                 # Пример успешного ответа
@@ -305,13 +312,20 @@ def add_news_to_category(request):
         try:
             # Получаем данные из тела запроса
             data = json.loads(request.body.decode('utf-8'))
+            session_id_from_request = data.get('sessionid')
 
+            # Получаем объект сессии по переданному sessionid
+            session = Session.objects.get(session_key=session_id_from_request)
+
+            # Получаем пользователя из сессии
+            user_id = session.get_decoded().get('_auth_user_id')
+            user = User.objects.get(pk=user_id)
             # Извлекаем значения из данных
             category_name = data.get('category_name')
             news_title = data.get('news_title')
 
             # Находим категорию пользователя
-            user_category = UserCategory.objects.filter(user=request.user, category_name=category_name).first()
+            user_category = UserCategory.objects.filter(user=user, category_name=category_name).first()
 
             if user_category is not None:
                 # Находим новость по заголовку
