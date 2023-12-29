@@ -1,8 +1,5 @@
 import axios from 'axios';
 import { API_URL } from '../utils/consts';
-import { updateCookie } from '../store/authStore';
-import { IHeaderDropdownItem } from '../models';
-import { useState } from 'react';
 
 // Запрос новостей по параметру категории/дате/стране
 export const getNews = async (parameter: string) => {
@@ -142,6 +139,18 @@ export const addArticleToCategory = async (
     news_title,
   });
   console.log('addArticleToCategory ', response);
+  return response;
+};
+
+// запрос на удаление новости из пользовательского списка
+export const deleteArticleFromUserCategory = async (categoryName: string, title: string) => {
+  const sessionid = localStorage.getItem('cookie');
+  const response = await axios.post(`${API_URL}/delete_news/`, {
+    sessionid,
+    categoryName,
+    title
+  });
+  console.log('deleteArticleFromUserCategory ', response);
   return response;
 };
 
