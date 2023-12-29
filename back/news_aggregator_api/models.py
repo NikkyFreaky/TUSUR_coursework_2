@@ -167,7 +167,7 @@ class FamousDate(models.Model):
     # Поля
     famous_date_id = models.AutoField(primary_key=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    famous_date = models.DateField(auto_now=True, help_text='Известная дата')
+    famous_date = models.DateField(help_text='Известная дата')
 
     # Методы
     def __str__(self):

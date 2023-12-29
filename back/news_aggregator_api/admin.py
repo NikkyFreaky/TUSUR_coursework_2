@@ -18,7 +18,7 @@ admin.site.register(UserProfile)
 
 @admin.register(News)
 class NewsAdmin(admin.ModelAdmin):
-    list_filter = ('categories', 'countries', 'event_date', )
+    list_filter = ('categories', 'countries', 'event_date',)
 
 
 @admin.register(Source)
