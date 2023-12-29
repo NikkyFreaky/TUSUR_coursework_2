@@ -278,14 +278,14 @@ def create_user_category(request):
             user_id = session.get_decoded().get('_auth_user_id')
             user = User.objects.get(pk=user_id)
             # Извлекаем значения из данных
-            category_name = data.get('category_name')
+            user_category_name = data.get('category_name')
 
             # Проверяем, существует ли категория с таким именем для данного пользователя
-            existing_category = UserCategory.objects.filter(user=user, category_name=category_name).first()
+            existing_category = UserCategory.objects.filter(user=user, category_name=user_category_name).first()
 
             if existing_category is None:
                 # Если категории не существует, создаем новую
-                new_category = UserCategory(user=user, category_name=category_name)
+                new_category = UserCategory(user=user, category_name=user_category_name)
                 new_category.save()
 
                 # Пример успешного ответа
