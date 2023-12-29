@@ -21,6 +21,6 @@ urlpatterns = [
     path('add_news_to_category/', views.add_news_to_category, name='add_news_to_category'),
     path('create_user_category/', views.create_user_category, name='create_user_category'),
     path('get_user_category/', views.get_user_categories, name='get_user_categories'),
-
+    path('news_user_category/', views.get_news_from_user_categories, name='news_user_category')
 
 ]
