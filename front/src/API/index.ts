@@ -116,6 +116,17 @@ export const createUserCategory = async (category_name: string) => {
   return response;
 };
 
+// запрос на удаление пользовательского списка
+export const deleteUserCategory = async (categoryName: string) => {
+  const sessionid = localStorage.getItem('cookie');
+  const response = await axios.post(`${API_URL}/delete_category/`, {
+    sessionid,
+    categoryName,
+  });
+  console.log('createUserCategory ', response);
+  return response;
+};
+
 // Вспомогательная функция проверки параметра при запросе новостей
 const parametercheck = (parameter: string) => {
   const countryList = [

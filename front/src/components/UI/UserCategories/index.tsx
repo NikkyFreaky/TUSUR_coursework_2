@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { IHeaderDropdownItem } from '../../../models';
 import './userCategories.css';
-import { createUserCategory, getUserCategories } from '../../../API';
+import {
+  createUserCategory,
+  deleteUserCategory,
+  getUserCategories,
+} from '../../../API';
 
 export interface IUserCategories {}
 
@@ -71,6 +75,16 @@ export const UserCategories: React.FC<IUserCategories> = ({}) => {
     window.location.reload();
   };
 
+  // удаление пользовательской категории
+  const handleCategoryDelete = (categoryName: string) => {
+    // Ваша логика удаления категории
+    console.log('Deleting category:', categoryName);
+    deleteUserCategory(categoryName);
+    window.location.reload();
+  };
+
+  //добавление новости в юзерлист
+
   return (
     <div className={`headerButtonContainer ${isDropdownOpen ? 'open' : ''}`}>
       <button className="headerButton" onClick={handleButtonClick}>
@@ -79,19 +93,22 @@ export const UserCategories: React.FC<IUserCategories> = ({}) => {
 
       {isDropdownOpen && (
         <div className="dropdownContent">
-          {/* Добавляем стили для прокрутки и отображения только 8 элементов */}
           <div className="dropdownItemsWrapper">
             <a href="#" onClick={() => addUserCategory()}>
               Новая
             </a>
             {items.map((item, index) => (
-              <a
-                key={index}
-                href={item.href}
-                onClick={(e) => handleDropdownItemClick}
-              >
-                {item.text}
-              </a>
+              <div key={index} className="categoryItem">
+                <a
+                  href={item.href}
+                  onClick={() => handleDropdownItemClick(item.href)}
+                >
+                  {item.text}
+                </a>
+                <button onClick={() => handleCategoryDelete(item.text)}>
+                  Удалить
+                </button>
+              </div>
             ))}
           </div>
         </div>
