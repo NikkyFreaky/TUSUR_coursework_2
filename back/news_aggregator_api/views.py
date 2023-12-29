@@ -64,8 +64,11 @@ def get_news_by_date(request, date):
 
 
 # Поиск новостей по ключевым словам
+@csrf_exempt
 def news_search_by_keywords(request):
-    return news_search(request)
+    data = json.loads(request.body.decode('utf-8'))
+    search_value = data.get('searchValue')
+    return news_search(request, search_value)
 
 
 #  ниже простарнство для создания новых функций
@@ -98,9 +101,12 @@ def register(request):
                 UserProfile.objects.create(user=user, system=system)
 
                 auth_login(request, user)
-
+                django_session = Session.objects.get(session_key=request.session.session_key)
                 # Пример успешного ответа
-                response_data = {'status': 'success', 'message': 'Registration successful'}
+                response_data = {'status': 'success',
+                                 'message': 'Registration successful',
+                                 'sessionid': django_session.session_key,
+                                 'session_expire_at': django_session.expire_date.timestamp(),}
                 return JsonResponse(response_data)
             else:
                 # Пример ответа с ошибками формы

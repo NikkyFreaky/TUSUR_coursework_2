@@ -7,6 +7,7 @@ export const getNews = async (parameter: string) => {
   const checkForSearch = parameter.split('/')[0];
   console.log('API getNews parse parameter: ', parameter);
   if (checkForSearch === 'search') {
+
     // http://127.0.0.1:8000/api/news/search/
     //const keyword = parameter.split('/')[1];
     // console.log('API getNews keyword: ', keyword);
@@ -16,6 +17,7 @@ export const getNews = async (parameter: string) => {
     //const responce = await axios.get(`${API_URL}/news/search/`, { headers });
 
     const searchValue = localStorage.getItem('keyword');
+
     const response = await axios.post(`${API_URL}/news/search/`, { searchValue });
 
     return response;
@@ -64,11 +66,7 @@ export const registerInAccount = async (
     password2: password2,
   });
 
-  const cookie = response.headers['set-cookie'];
-  if (cookie) {
-    console.log('API register request', cookie);
-    localStorage.setItem('cookie', JSON.stringify(cookie));
-  }
+  localStorage.setItem('cookie', response.data.sessionid);
 
   return response;
 };

@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import Modal from './../Modal'; // Подключите ваш компонент Modal
-import { registerInAccount } from '../../API';
+import { registerInAccount, getAccountData } from '../../API';
 import Notification from '../Notification';
 import './../Modal/modal.css';
 import './registerModal.css';
@@ -31,10 +31,14 @@ const RegisterModal: FC<IRegisterModalProps> = ({ isOpen, onClose }) => {
       .then((responce) => {
         // успешная регистрация
         if (responce.data.status === 'success') {
-          updateName(first_name);
-          updateSurname(last_name);
-          updateLogin(login);
-          updateEmail(email);
+          getAccountData()
+            .then((res) => {
+              localStorage.setItem('name', res.data.name);
+              localStorage.setItem('surname', res.data.surname);
+              localStorage.setItem('login', res.data.login);
+              localStorage.setItem('email', res.data.email);
+            })
+            .catch((e) => console.log('AuthModal getAccountData error: ', e));
           localStorage.setItem('isAuth', JSON.stringify(true));
 
           setShowNotification(true);
