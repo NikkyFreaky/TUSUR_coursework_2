@@ -106,7 +106,7 @@ def register(request):
                 response_data = {'status': 'success',
                                  'message': 'Registration successful',
                                  'sessionid': django_session.session_key,
-                                 'session_expire_at': django_session.expire_date.timestamp(),}
+                                 'session_expire_at': django_session.expire_date.timestamp(), }
                 return JsonResponse(response_data)
             else:
                 # Пример ответа с ошибками формы
@@ -238,7 +238,7 @@ def get_user_data(request):
 
             # Извлекаем sessionid из данных запроса
             session_id_from_request = data.get('sessionid')
-            print(data)
+
             # Получаем объект сессии по переданному sessionid
             session = Session.objects.get(session_key=session_id_from_request)
 
@@ -345,10 +345,21 @@ def add_news_to_category(request):
 
 @csrf_exempt
 def get_user_categories(request):
-    if request.method == 'GET':
+    if request.method == 'POST':
         try:
+            data = json.loads(request.body.decode('utf-8'))
+
+            # Извлекаем sessionid из данных запроса
+            session_id_from_request = data.get('sessionid')
+
+            # Получаем объект сессии по переданному sessionid
+            session = Session.objects.get(session_key=session_id_from_request)
+
+            # Получаем пользователя из сессии
+            user_id = session.get_decoded().get('_auth_user_id')
+            user = User.objects.get(pk=user_id)
             # Получаем все категории пользователя
-            user_categories = UserCategory.objects.filter(user=request.user)
+            user_categories = UserCategory.objects.filter(user)
 
             # Преобразуем категории в список словарей
             categories_list = [{'id': category.id, 'name': category.category_name} for category in user_categories]
@@ -368,20 +379,136 @@ def get_user_categories(request):
 
 
 @csrf_exempt
-def check_online(request):
-    try:
-        # Получаем текущего пользователя
-        user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+def del_user_categories(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
 
-        # Проверяем статус "онлайн"
-        is_online = getattr(user_profile, 'is_online', False)
+            # Извлекаем sessionid из данных запроса
+            session_id_from_request = data.get('sessionid')
+            user_category_name = data.get('categoryName')
+            # Получаем объект сессии по переданному sessionid
+            session = Session.objects.get(session_key=session_id_from_request)
 
-        # Возвращаем ответ с текущим статусом "онлайн"
-        response_data = {'status': 'success', 'is_online': is_online}
-        return JsonResponse(response_data)
+            # Получаем пользователя из сессии
+            user_id = session.get_decoded().get('_auth_user_id')
+            user = User.objects.get(pk=user_id)
 
-    except Exception as e:
-        # Обработка ошибок
-        print('Error during online check:', str(e))
-        response_data = {'status': 'error', 'message': 'An error occurred during online check'}
-        return JsonResponse(response_data, status=500)
+            user_category = UserCategory.objects.get(user=user, user_category_name=user_category_name)
+
+            # Удаляем объект UserCategory без удаления связанных новостей
+            user_category.delete()
+
+            response_data = {'status': 'success'}
+            return JsonResponse(response_data)
+        except Exception as e:
+            # Обработка ошибок
+            print('Error getting user categories:', str(e))
+            response_data = {'status': 'error', 'message': 'An error occurred while getting user categories'}
+            return JsonResponse(response_data, status=500)
+
+    # Обработка неверного метода запроса
+    response_data = {'status': 'error', 'message': 'Invalid request method'}
+    return JsonResponse(response_data, status=400)
+
+
+@csrf_exempt
+def del_news_from_user_category(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+
+            # Извлекаем sessionid из данных запроса
+            session_id_from_request = data.get('sessionid')
+            user_category_name = data.get('categoryName')
+            news_title = data.get('title')
+
+            # Получаем объект сессии по переданному sessionid
+            session = Session.objects.get(session_key=session_id_from_request)
+
+            # Получаем пользователя из сессии
+            user_id = session.get_decoded().get('_auth_user_id')
+            user = User.objects.get(pk=user_id)
+
+            # Получаем категорию пользователя
+            user_category = UserCategory.objects.get(user=user, user_category_name=user_category_name)
+
+            # Получаем объект новости из общей базы данных
+            news = News.objects.get(title=news_title)
+
+            # Удаляем связь между категорией пользователя и новостью
+            user_category.news.remove(news)
+
+            return JsonResponse({'status': 'success', 'message': 'News removed from user category'})
+        except Exception as e:
+            # Обработка ошибок
+            print('Error during deleting news from user category:', str(e))
+            response_data = {'status': 'error', 'message': 'An error occurred during the process'}
+            return JsonResponse(response_data, status=500)
+
+    # Обработка неверного метода запроса
+    response_data = {'status': 'error', 'message': 'Invalid request method'}
+    return JsonResponse(response_data, status=400)
+
+
+@csrf_exempt
+def get_news_from_user_categories(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+
+            # Извлекаем sessionid из данных запроса
+            session_id_from_request = data.get('sessionid')
+            user_category_name = data.get('categoryName')
+
+            # Получаем объект сессии по переданному sessionid
+            session = Session.objects.get(session_key=session_id_from_request)
+
+            # Получаем пользователя из сессии
+            user_id = session.get_decoded().get('_auth_user_id')
+            user = User.objects.get(pk=user_id)
+
+            # Получаем категорию пользователя
+            user_category = UserCategory.objects.get(user=user, user_category_name=user_category_name)
+
+            # Получаем все новости в данной категории
+            news_list = user_category.news.all()
+            response_data = {
+                'success': True,
+                'news': []
+            }
+            # Формируем список новостей
+
+            for news in news_list:
+                assets = news.asset_set.all()
+                asset_info = {
+                    'images': assets[0].images if assets else None,
+                    'videos': assets[0].videos if assets else None,
+                }
+
+                news_item = {
+                    'source': {
+                        'name': news.source.source_name,
+                        'link': news.source.source_link,
+                    },
+                    'title': news.title,
+                    'description': news.description,
+                    'event_date': news.event_date.isoformat() if news.event_date else None,
+                    'publication_date': news.publication_date.isoformat(),
+                    'categories': [category.category_name for category in news.categories.all()],
+                    'countries': [country.country_name for country in news.countries.all()],
+                    'assets': asset_info,
+                }
+                response_data['news'].append(news_item)
+            return JsonResponse(response_data)
+        except Exception as e:
+            # Обработка ошибок
+            print('Error during getting news from user category:', str(e))
+            response_data = {'status': 'error', 'message': 'An error occurred during the process'}
+            return JsonResponse(response_data, status=500)
+
+    # Обработка неверного метода запроса
+    response_data = {'status': 'error', 'message': 'Invalid request method'}
+    return JsonResponse(response_data, status=400)
+
+
