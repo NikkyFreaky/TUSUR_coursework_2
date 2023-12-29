@@ -363,9 +363,12 @@ def get_user_categories(request):
 
             # Преобразуем категории в список словарей
             categories_list = [{'name': category.user_category_name} for category in user_categories]
-
+            response_data = {
+                'status': True,
+                'name': [category['name'] for category in categories_list]
+            }
             # Возвращаем список категорий в формате JSON
-            response_data = {'status': 'success', 'categories': categories_list}
+
             return JsonResponse(response_data)
         except Exception as e:
             # Обработка ошибок
