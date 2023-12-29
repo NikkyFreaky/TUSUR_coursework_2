@@ -16,6 +16,7 @@ import {
 import Modal from '../../components/Modal';
 import AuthModal from '../../components/AuthModal';
 import RegisterModal from '../../components/RegisterModal';
+import { UserCategories } from '../../components/UI/UserCategories';
 
 export const Root = () => {
   const navigate = useNavigate();
@@ -91,20 +92,13 @@ export const Root = () => {
           </div>
           <div className="contentBottom">
             <HeaderButton value="Аккаунт" link="/account/" />
+            {initialIsAuth === true ? <UserCategories /> : <div></div>}
             <HeaderDropdown value="По стране" items={dropdownItemsCountry} />
             <HeaderDropdown
               value="По категориям"
               items={dropdownItemsCategory}
             />
             <HeaderDropdown value="По дате" items={dropdownItemsTime} />
-            {initialIsAuth === true ? (
-              <HeaderDropdown
-                value="Пользовательские"
-                items={dropdownItemsTime}
-              />
-            ) : (
-              <div></div>
-            )}
           </div>
         </div>
       </div>

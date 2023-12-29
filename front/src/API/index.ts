@@ -7,7 +7,6 @@ export const getNews = async (parameter: string) => {
   const checkForSearch = parameter.split('/')[0];
   console.log('API getNews parse parameter: ', parameter);
   if (checkForSearch === 'search') {
-
     // http://127.0.0.1:8000/api/news/search/
     //const keyword = parameter.split('/')[1];
     // console.log('API getNews keyword: ', keyword);
@@ -18,7 +17,9 @@ export const getNews = async (parameter: string) => {
 
     const searchValue = localStorage.getItem('keyword');
 
-    const response = await axios.post(`${API_URL}/news/search/`, { searchValue });
+    const response = await axios.post(`${API_URL}/news/search/`, {
+      searchValue,
+    });
 
     return response;
   } else {
@@ -71,13 +72,6 @@ export const registerInAccount = async (
   return response;
 };
 
-// // запрос на выход
-// export const logOutAccount = async () => {
-//   const response = await axios.post(`${API_URL}/logout/`);
-
-//   return response;
-// };
-
 // запрос на выход
 export const logOutAccount = async () => {
   // Получаем куки из localStorage
@@ -95,11 +89,12 @@ export const getAccountData = async () => {
   return response;
 };
 
-// поиск по ключевым словам
-// http://127.0.0.1:8000/api/news/search/
-export const getSearchResult = async (keyword: string) => {
-  const headers = { q: keyword };
-  const response = await axios.get(`${API_URL}/news/search/?q=` + keyword);
+// запрос на получение списка пользовательских категорий
+export const getUserCategories = async () => {
+  const sessionid = localStorage.getItem('cookie');
+  const response = await axios.post(`${API_URL}/get_user_category/`, {
+    sessionid,
+  });
   return response;
 };
 
