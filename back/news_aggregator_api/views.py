@@ -462,7 +462,7 @@ def get_news_from_user_categories(request):
 
             # Извлекаем sessionid из данных запроса
             session_id_from_request = data.get('sessionid')
-            user_category_name = data.get('categoryName')
+            user_category_name = data.get('userCategoryName')
 
             # Получаем объект сессии по переданному sessionid
             session = Session.objects.get(session_key=session_id_from_request)
