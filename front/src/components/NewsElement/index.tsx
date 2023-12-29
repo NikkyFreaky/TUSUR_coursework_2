@@ -1,7 +1,7 @@
-import React from 'react';
 import './news-element.css';
-import { INewsElement } from '../../models';
+import { IHeaderDropdownItem, INewsElement } from '../../models';
 import placeholder from '../../assets/placeholder.jpg';
+import { NewsElementDropdown } from '../UI/NewsElementDropdown';
 
 interface props {
   article: INewsElement;
@@ -11,6 +11,7 @@ export const NewsElement: React.FC<props> = ({ article }) => {
   const openInNewTab = (url: string) => {
     window.open(url, '_blank', 'noopener,noreferrer');
   };
+  
 
   return (
     <div className="article-card">
@@ -32,6 +33,9 @@ export const NewsElement: React.FC<props> = ({ article }) => {
         <div className="main-info__desc">{article.description}</div>
         <div>{article.event_date}</div>
       </div>
+      <NewsElementDropdown
+        articleTitle={article.title}
+      />
     </div>
   );
 };

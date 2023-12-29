@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { API_URL } from '../utils/consts';
 import { updateCookie } from '../store/authStore';
+import { IHeaderDropdownItem } from '../models';
+import { useState } from 'react';
 
 // Запрос новостей по параметру категории/дате/стране
 export const getNews = async (parameter: string) => {
@@ -102,6 +104,7 @@ export const getUserCategories = async () => {
   const response = await axios.post(`${API_URL}/get_user_category/`, {
     sessionid,
   });
+
   return response;
 };
 
@@ -124,6 +127,21 @@ export const deleteUserCategory = async (categoryName: string) => {
     categoryName,
   });
   console.log('createUserCategory ', response);
+  return response;
+};
+
+// добавление новости в пользовательскую категорию
+export const addArticleToCategory = async (
+  category_name: string,
+  news_title: string,
+) => {
+  const sessionid = localStorage.getItem('cookie');
+  const response = await axios.post(`${API_URL}/add_news_to_category/`, {
+    sessionid,
+    category_name,
+    news_title,
+  });
+  console.log('addArticleToCategory ', response);
   return response;
 };
 

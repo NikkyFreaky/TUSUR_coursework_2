@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './news-list.css';
 import { INewsList } from '../../models';
 import { NewsElement } from '../NewsElement';
 import { Pagination } from '../Pagination'; // Подключаем компонент Pagination
+import { getUserCategories } from '../../API';
 
 interface INewsListWithPagination extends INewsList {
   currentPage: number;
@@ -30,7 +31,7 @@ export const NewsList: React.FC<INewsListWithPagination> = ({
       {success ? (
         <div>
           {currentNews.map((article) => (
-            <NewsElement article={article} />
+            <NewsElement article={article}  />
           ))}
           <Pagination
             pages={Array.from(
