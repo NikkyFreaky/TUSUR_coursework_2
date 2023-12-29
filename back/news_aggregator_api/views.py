@@ -359,10 +359,10 @@ def get_user_categories(request):
             user_id = session.get_decoded().get('_auth_user_id')
             user = User.objects.get(pk=user_id)
             # Получаем все категории пользователя
-            user_categories = UserCategory.objects.filter(user)
+            user_categories = UserCategory.objects.filter(user=user)
 
             # Преобразуем категории в список словарей
-            categories_list = [{'id': category.id, 'name': category.category_name} for category in user_categories]
+            categories_list = [{'name': category.user_category_name} for category in user_categories]
 
             # Возвращаем список категорий в формате JSON
             response_data = {'status': 'success', 'categories': categories_list}
