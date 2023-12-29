@@ -66,6 +66,7 @@ def get_news_by_date(request, date):
 # Поиск новостей по ключевым словам
 @csrf_exempt
 def news_search_by_keywords(request):
+
     data = json.loads(request.body.decode('utf-8'))
     search_value = data.get('searchValue')
     return news_search(request, search_value)

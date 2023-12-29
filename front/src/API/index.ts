@@ -3,11 +3,13 @@ import { API_URL } from '../utils/consts';
 
 // Запрос новостей по параметру категории/дате/стране
 export const getNews = async (parameter: string) => {
+   //console.log('API getNews parse parameter: ', parameter);
+   //parameter = 'news' + parameter;
   const checkForSearch = parameter.split('/')[1];
-  console.log('API getNews parse parameter: ', parameter);
-  console.log('API getNews checkForSearch: ', checkForSearch);
+  //console.log('API getNews parse parameter: ', parameter);
+  //console.log('API getNews checkForSearch: ', checkForSearch);
   // поиск новости по ключевому слову
-  if (checkForSearch === 'search') {
+  if (parameter === 'search/') {
     // http://127.0.0.1:8000/api/news/search/
     const searchValue = localStorage.getItem('keyword');
     const response = await axios.post(`${API_URL}/news/search/`, {
