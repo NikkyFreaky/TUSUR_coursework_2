@@ -105,14 +105,14 @@ export const getUserCategories = async () => {
   return response;
 };
 
-// запрос на получение списка новостей из пользовательской категории
-export const getUserCategoryNews = async (userCategoryName: string) => {
+// запрос на создание пользовательской категории
+export const createUserCategory = async (category_name: string) => {
   const sessionid = localStorage.getItem('cookie');
-  const response = await axios.post(`${API_URL}/news_user_category/`, {
+  const response = await axios.post(`${API_URL}/create_user_category/`, {
     sessionid,
-    userCategoryName,
+    category_name,
   });
-  console.log('getUserCategoryNews', response);
+  console.log('createUserCategory ', response);
   return response;
 };
 

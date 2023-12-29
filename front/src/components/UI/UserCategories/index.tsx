@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { IHeaderDropdownItem } from '../../../models';
 import './userCategories.css';
-import { getUserCategories } from '../../../API';
+import { createUserCategory, getUserCategories } from '../../../API';
 
 export interface IUserCategories {}
 
@@ -63,6 +63,14 @@ export const UserCategories: React.FC<IUserCategories> = ({}) => {
     };
   }, []);
 
+  //добавление пользовательской категории
+  const addUserCategory = () => {
+    // вызов модалки с запросом на название категории
+    const newCategoryName = 'Bunnies';
+    createUserCategory(newCategoryName);
+    window.location.reload();
+  };
+
   return (
     <div className={`headerButtonContainer ${isDropdownOpen ? 'open' : ''}`}>
       <button className="headerButton" onClick={handleButtonClick}>
@@ -73,6 +81,9 @@ export const UserCategories: React.FC<IUserCategories> = ({}) => {
         <div className="dropdownContent">
           {/* Добавляем стили для прокрутки и отображения только 8 элементов */}
           <div className="dropdownItemsWrapper">
+            <a href="#" onClick={() => addUserCategory()}>
+              Новая
+            </a>
             {items.map((item, index) => (
               <a
                 key={index}
