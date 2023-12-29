@@ -325,7 +325,7 @@ def add_news_to_category(request):
             news_title = data.get('news_title')
 
             # Находим категорию пользователя
-            user_category = UserCategory.objects.filter(user=user, category_name=category_name).first()
+            user_category = UserCategory.objects.filter(user=user, user_category_name=category_name).first()
 
             if user_category is not None:
                 # Находим новость по заголовку

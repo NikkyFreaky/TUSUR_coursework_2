@@ -23,5 +23,6 @@ urlpatterns = [
     path('get_user_category/', views.get_user_categories, name='get_user_categories'),
     path('news_user_category/', views.get_news_from_user_categories, name='news_user_category'),
     path('delete_category/', views.del_user_categories, name='delete_category'),
+    path('delete_news/', views.del_news_from_user_category, name='delete_news'),
 
 ]
